@@ -2,6 +2,28 @@
 
 
 
+
+
+Game_System.prototype.isJapanese = function() {
+   return true;
+};
+
+Spriteset_Map.prototype.loadTileset = function() {
+    this._tileset = $gameMap.tileset();
+    if (this._tileset) {
+        var tilesetNames = this._tileset.tilesetNames;
+        for (var i = 0; i < tilesetNames.length; i++) {
+        if(!this._tilemap){
+        this.createTilemap();
+        this.createShadow();
+        }
+            this._tilemap.bitmaps[i] = ImageManager.loadTileset(tilesetNames[i]);
+        }
+        this._tilemap.flags = $gameMap.tilesetFlags();
+        this._tilemap.refresh();
+    }
+};
+
 Scene_Save.prototype.onSavefileOk = function() {
 	$gameVariables.setValue(493, 0);
     Scene_File.prototype.onSavefileOk.call(this);
@@ -100,10 +122,20 @@ $gameSwitches.setValue(23,true)
 num = $gameVariables.value(441)
 num += 1
 $gameVariables.setValue(441,num)
-id = $gameVariables.value(441) +441
-$gameVariables.setValue(id,item.name)
+id = $gameVariables.value(441) +441;
+var mep = 1;
+if(item.meta.itemep) mep = item.meta.itemep;
+var namm = " ";
+namm = item.name;
+if($gameSwitches.value(629)){
+var array = [" ", 0];
+array = [namm, mep];
+$gameVariables.setValue(id, array);
+}else{
+$gameVariables.setValue(id, namm);
+}
         });
-    }
+    };
     $gameSwitches.setValue(251, true)
 };
 

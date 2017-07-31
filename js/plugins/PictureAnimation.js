@@ -223,7 +223,7 @@
                 break;
             case 'PA_START_LOOP' :
             case 'ピクチャのループアニメーション開始':
-                if($gameSwitches.value(168)){
+                if($gameSwitches.value(168) || $gameSwitches.value(631)){
                    pictureNum     = 50 - $gameVariables.value(518)
                   } else {
                    pictureNum     = getArgNumber(args[0], 1, $gameScreen.maxPictures());
@@ -241,7 +241,7 @@
                 break;
             case 'PA_STOP_FORCE' :
             case 'ピクチャのアニメーション強制終了':
-                if($gameSwitches.value(168)){
+                if($gameSwitches.value(168) || $gameSwitches.value(631)){
                    pictureNum     = 50 - $gameVariables.value(518)
                   } else {
                    pictureNum    = getArgNumber(args[0], 1, $gameScreen.maxPictures());

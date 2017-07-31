@@ -1,18 +1,21 @@
 //=============================================================================
 // SyncVariable.js
 // ----------------------------------------------------------------------------
-// Copyright (c) 2015 Triacontane
+// Copyright (c) 2015-2017 Triacontane
 // This software is released under the MIT License.
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.2.1 2017/06/10 戦闘中にも同期できる設定を追加
+// 1.2.0 2017/06/10 同期をマップ画面でのみ行うよう修正。ロードおよびニューゲーム時に確実に受信するよう修正
+// 1.1.4 2017/06/02 ゲームデータ作成前にデータ受信した際にエラーになる問題を修正
 // 1.1.3 2016/06/29 追加でネットワークエラー対応
 // 1.1.2 2016/06/28 ゲーム中にネットワークが切断された場合にエラーになる現象を修正
 // 1.1.1 2016/06/02 認証ファイルの形式をJSONでも作成できるよう修正
 // 1.1.0 2016/05/25 Milkcocoa側のAPI更新によりローカル環境で実行できなくなっていた問題を修正
 // 1.0.0 2016/04/29 初版
 // ----------------------------------------------------------------------------
-// [Blog]   : http://triacontane.blogspot.jp/
+// [Blog]   : https://triacontane.blogspot.jp/
 // [Twitter]: https://twitter.com/triacontane/
 // [GitHub] : https://github.com/triacontane/
 //=============================================================================
@@ -45,10 +48,16 @@
  * @desc 認証ファイルの形式をJSON形式で作成します。ブラウザ実行時にファイルをうまく読み込めない場合、ONにしてください。
  * @default OFF
  *
+ * @param 戦闘中同期
+ * @desc 戦闘中も変数変化による同期を実施するようになります。
+ * @default OFF
+ *
  * @help ゲームをプレーしている全てのユーザ間で指定範囲内のスイッチ、変数の値を
  * 同期し、共有できるようになります。
  * オンライン要素が存在するゲームで使えるほか、作者が任意のタイミングで
  * プレイヤーのデータの変数・スイッチを操作できます。
+ *
+ * 同期処理はマップ画面でのみ実行されますが、設定次第で戦闘中も同期可能です。
  *
  * BaaS(Backend as a service)にMilkcocoa(https://mlkcca.com/)を使用していますが、
  * 新規に利用登録する必要はなく通常利用する上で意識する必要はありません。
@@ -103,8 +112,7 @@
  * 3. 認証ファイルとはセキュリティを担保するものではなく
  * 共有スペース内で同一のユーザIDが使用されないように区切る
  * ためのものです。
- * 他のサービスで使っているパスワードを流用することは
- * 止めてください。
+ * 他のサービスで使っているパスワードを流用することはお控えください。
  *
  * 利用規約：
  *  作者に無断で改変、再配布が可能で、利用形態（商用、18禁利用等）
@@ -177,6 +185,7 @@ function SyncManager() {
     var paramSyncSwitchStart   = getParamNumber(['SyncSwitchStart', '同期開始スイッチ番号'], 0, 5000);
     var paramSyncSwitchEnd     = getParamNumber(['SyncSwitchEnd', '同期終了スイッチ番号'], 0, 5000);
     var paramAuthFileFormat    = getParamBoolean(['AuthFileFormat', '認証ファイル形式']);
+    var paramSyncInBattle      = getParamBoolean(['SyncInBattle', '戦闘中同期']);
 
     //=============================================================================
     // Game_Interpreter
@@ -188,22 +197,16 @@ function SyncManager() {
         try {
             this.pluginCommandSyncVariable(command, args);
         } catch (e) {
-        if (!$gameSwitches.value(239)){
             if ($gameTemp.isPlaytest() && Utils.isNwjs()) {
                 var window = require('nw.gui').Window.get();
                 if (!window.isDevToolsOpen()) {
-                    var devTool = window.showDevTools();
-                    devTool.moveTo(0, 0);
-                    devTool.resizeTo(window.screenX + window.outerWidth, window.screenY + window.outerHeight);
-                    window.focus();
+                    //var devTool = window.showDevTools();
+                    //devTool.moveTo(0, 0);
+                    //devTool.resizeTo(window.screenX + window.outerWidth, window.screenY + window.outerHeight);
+                    //window.focus();
                 }
             }
-            
-            //console.log('プラグインコマンドの実行中にエラーが発生しました。');
-            //console.log('- コマンド名 　: ' + command);
-            //console.log('- コマンド引数 : ' + args);
-            //console.log('- エラー原因   : ' + e.toString());
-            }
+
         }
     };
 
@@ -304,6 +307,11 @@ function SyncManager() {
         this._callLoadListeners();
     };
 
+    SyncManager.start = function() {
+        this.needDownload = true;
+        this.isDownloaded = false;
+    };
+
     SyncManager.addLoadListener = function(listener) {
         if (!this._online) {
             this._loadListeners.push(listener);
@@ -320,15 +328,11 @@ function SyncManager() {
     };
 
     SyncManager.canUse = function() {
-        return this._online && this._authority;
+        return this._online && this._authority && $gameSwitches && $gameVariables
     };
 
     SyncManager.setNeedUpload = function() {
         if (!this.isExecute) this.needUpload = true;
-    };
-
-    SyncManager.setNeedDownload = function() {
-        if (!this.isExecute) this.needDownload = true;
     };
 
     SyncManager.update = function() {
@@ -367,7 +371,10 @@ function SyncManager() {
     };
 
     SyncManager.downloadVariables = function() {
-        if (!this.canUse()) return;
+        if (!this.canUse()) {
+            this.needDownload = true;
+            return;
+        }
         this._mainData.get(paramUserId, function(err, datum) {
             if (!err) {
                 this.outLog('変数情報を受信しました。');
@@ -486,7 +493,7 @@ function SyncManager() {
     };
 
     SyncManager.pause = function(handler) {
-        //console.log('続行するには何かキーを押してください……');
+        console.log('続行するには何かキーを押してください……');
         setInterval(function() {
             if (Object.keys(Input._currentState).length > 0 || TouchInput.isPressed()) handler();
         }, 100);
@@ -499,14 +506,14 @@ function SyncManager() {
     var DataManager_loadGameWithoutRescue = DataManager.loadGameWithoutRescue;
     DataManager.loadGameWithoutRescue     = function(savefileId) {
         var result = DataManager_loadGameWithoutRescue.apply(this, arguments);
-        if (result) SyncManager.setNeedDownload();
+        if (result) SyncManager.start();
         return result;
     };
 
     var _DataManager_setupNewGame = DataManager.setupNewGame;
     DataManager.setupNewGame      = function() {
         _DataManager_setupNewGame.apply(this, arguments);
-        SyncManager.setNeedDownload();
+        SyncManager.start();
     };
 
     //=============================================================================
@@ -569,7 +576,13 @@ function SyncManager() {
     var _SceneManager_updateMain = SceneManager.updateMain;
     SceneManager.updateMain      = function() {
         _SceneManager_updateMain.apply(this, arguments);
-        SyncManager.update();
+        if (this.isSyncScene()) {
+            SyncManager.update();
+        }
+    };
+
+    SceneManager.isSyncScene = function() {
+        return this._scene instanceof Scene_Map || (paramSyncInBattle && this._scene instanceof Scene_Battle);
     };
 
     var _SceneManager_onError = SceneManager.onError;
@@ -578,4 +591,3 @@ function SyncManager() {
         _SceneManager_onError.apply(this, arguments);
     };
 })();
-

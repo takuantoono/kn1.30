@@ -62,6 +62,9 @@ BattleManager.checkBattleEnd = function() {
 			enemy.gainHp(enemy.autolife);
 			enemy.removeState(enemy.autolifeStateId());
 			enemy.startAnimation(Jene.autolifeAnimationId, false, $dataAnimations[Jene.autolifeAnimationId].frames * 4);
+			console.log(enemy._flashDamageCol)
+			enemy._flashDamageCol = false;
+			if(enemy._flashDamageDone)$gameSwitches.setValue(685, true);
 			if (Imported.YEP_BattleEngineCore) {
 				BattleManager.actionWaitForAnimation();
 			}

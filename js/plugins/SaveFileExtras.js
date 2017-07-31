@@ -234,7 +234,11 @@
 	var oldMakeSavefileInfo = DataManager.makeSavefileInfo;
 	DataManager.makeSavefileInfo = function() {
 		var info = oldMakeSavefileInfo.call(this);
-		info.location = $dataMap.displayName != "" ? $dataMap.displayName : $dataMapInfos[$gameMap.mapId()].name;
+		if($gameSwitches.value(24) && $gameSwitches.value(629)){
+			info.location =  $gameVariables.value(778);
+		}else{
+			info.location = $dataMap.displayName != "" ? $dataMap.displayName : $dataMapInfos[$gameMap.mapId()].name;
+		}
 		info.level = $gameParty.members()[0].level;
 		info.gold = $gameParty.gold();
 		info.fileId = this._lastAccessedId;

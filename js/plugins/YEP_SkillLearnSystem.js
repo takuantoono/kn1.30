@@ -988,6 +988,7 @@ Window_SkillLearnClass.prototype.makeItemList = function() {
       this._data = [];
       for (var i = 0; i < this._actor.unlockedClasses().length; ++i) {
         var classId = this._actor.unlockedClasses()[i];
+        console.log("ac")
         var item = $dataClasses[classId];
         if (!item) continue;
         if (item.learnSkills.contains(this._skill.id)) {

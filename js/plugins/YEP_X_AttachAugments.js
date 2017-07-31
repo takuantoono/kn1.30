@@ -804,6 +804,7 @@ ItemManager.processAugmentEffect = function(line, mainItem, effectItem, slot) {
     return this.applyAugmentCanotDetach(mainItem, slot);
   }
   // ADD ATTACK ELEMENT: x
+  if(DataManager.isWeapon(mainItem)){
   if (line.match(/ADD ATTACK ELEMENT:[ ](.*)/i)) {
     var element = String(RegExp.$1).toUpperCase().trim();
     return this.applyAugmentAttackElement(mainItem, element, true);
@@ -827,6 +828,8 @@ ItemManager.processAugmentEffect = function(line, mainItem, effectItem, slot) {
     var text = String(RegExp.$1).toUpperCase().trim();
     return this.applyAugmentDebuff(mainItem, text, false);
   }
+  }
+  if(DataManager.isArmor(mainItem)){
   // ADD ELEMENT RATE: x
   if (line.match(/ADD ELEMENT RATE:[ ](.*)/i)) {
     var text = String(RegExp.$1).toUpperCase().trim();
@@ -834,6 +837,7 @@ ItemManager.processAugmentEffect = function(line, mainItem, effectItem, slot) {
   } else if (line.match(/REMOVE ELEMENT RATE:[ ](.*)/i)) {
     var text = String(RegExp.$1).toUpperCase().trim();
     return this.applyAugmentElement(mainItem, text, false);
+  }
   }
   // ADD PASSIVE STATE: x
   if (Imported.YEP_AutoPassiveStates) {
