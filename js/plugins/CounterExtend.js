@@ -424,30 +424,60 @@ var Imported = Imported || {};
         _BattleManager_startAction.apply(this, arguments);
     };
 
-    var _BattleManager_invokeCounterAttack = BattleManager.invokeCounterAttack;
-    BattleManager.invokeCounterAttack        = function(subject, target) {
-        this.invokeNormalAction(subject, target);
-        if (!target.isReserveCounterSkill()) {
-            _BattleManager_invokeCounterAttack.apply(this, arguments);
+
+
+  //* Request a counterattack after the normal attack */
+  var TH_BattleManager_invokeCounterAttack = BattleManager.invokeCounterAttack;  
+  BattleManager.invokeCounterAttack = function(subject, target) {
+    this.invokeNormalAction(subject, target);   
+    if (!target.isReserveCounterSkill()) {
+        this._logWindow.push('performCounterAfterHit', BattleManager.invokeCounterAfterHit, this, subject, target);
         } else {
-            var action = new Game_Action(target);
-            action.setCounterSkill();
-            if (paramPayCounterCost) target.useItem(action.item());
-            action.apply(subject);
-            this._logWindow.displaySkillCounter(target, action, [subject]);
-            this._logWindow.displayActionResults(target, subject);
+            this.invokeCounterSkill(subject, target);
+
+            
         }
         if (target.isCounterCancel()) {
             this._actionCancel = true;
         }
+  };
+  
+  BattleManager.invokeCounterSkill = function(subject, target) {
+        var counterSkillId = target.getCounterSkillId();
+        var action = new Game_Action(target);
+        action.setSkill(counterSkillId);
+        var counterTargetIndex;
+        if (action.isForFriend()) {
+            counterTargetIndex = target.friendsUnit().members().indexOf(target);
+        } else {
+            counterTargetIndex = subject.friendsUnit().members().indexOf(subject);
+        }
+        target.setCounterSubject(true);
+        target.forceAction(counterSkillId, counterTargetIndex);
+        this.forceAction(target);
+          
+    };
+  
+  BattleManager.invokeCounterAfterHit = function(subject, target) {
+    if (target.canCounter()) {
+      TH_BattleManager_invokeCounterAttack.call(this, subject, target);
+    }
+  };
+  
+  Game_BattlerBase.prototype.setCounterSubject = function(value) {
+        this._counterSubject = value;
     };
 
-    var _BattleManager_invokeAction = BattleManager.invokeAction;
-    BattleManager.invokeAction = function(subject, target) {
-        if (this._actionCancel) return;
-        _BattleManager_invokeAction.apply(this, arguments);
-    };
 
+  
+  Game_Battler.prototype.canCounter = function() {
+    return this.canMove();
+  };
+  
+  /* Perform a counterattack */
+  Window_BattleLog.prototype.performCounterAfterHit = function(method, caller, subject, target) {
+    method.call(caller, subject, target)
+  };
     //=============================================================================
     // Window_BattleLog
     //  スキルによる反撃を演出します。

@@ -1,5 +1,26 @@
 ﻿(function() {
 
+Game_BattlerBase.prototype.canUse = function(item) {
+if ($gameSwitches.value(706)) return false;
+    if (!item) {
+        return false;
+    } else if (DataManager.isSkill(item)) {
+        return this.meetsSkillConditions(item);
+    } else if (DataManager.isItem(item)) {
+        return this.meetsItemConditions(item);
+    } else {
+        return false;
+    }
+};
+
+Game_Battler.prototype.gainHp = function(value) {
+    this._result.hpDamage = -value;
+    this._result.hpAffected = true;
+    this._flashDamageCol = false;
+    this.setHp(this.hp + value);
+};
+
+
 var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
   Game_Interpreter.prototype.pluginCommand = function(command, args) {
     _Game_Interpreter_pluginCommand.call(this, command, args);
@@ -23,7 +44,10 @@ var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
     }
   };
 
-
+Sprite_Timer.prototype.updatePosition = function() {
+    this.x = 60;
+    this.y = 100;
+};
 
 Window_ActorCommand.prototype.addSkillCommands = function() {
     var skillTypes = this._actor.addedSkillTypes();
@@ -63,6 +87,7 @@ Game_Troop.prototype.expTotal = function() {
     if($gameVariables.value(293)==9)ppexp *= 2.3;
     if($gameVariables.value(293)==10)ppexp *= 3;
     }
+    if($gameSwitches.value(684))ppexp *= 2;
         return r + ppexp;
     }, 0);
 };
@@ -204,9 +229,25 @@ Spriteset_Battle.prototype.createLowerLayer = function() {
 };
 
 
+BattleManager.endTurn = function() {
+    this._phase = 'turnEnd';
+    this._preemptive = false;
+    this._surprise = false;
+    this.allBattleMembers().forEach(function(battler) {
+        battler.clearResult();
+    }, this);
+};
+
+BattleManager.endTurn2 = function() {
+    this.allBattleMembers().forEach(function(battler) {
+        battler.onTurnEnd();
+        this.refreshStatus();
+        this._logWindow.displayAutoAffectedStatus(battler);
+        this._logWindow.displayRegeneration(battler);
+    }, this);
+};
+
 Game_Battler.prototype.onTurnEnd = function() {
-    this.clearResult();
-    if($gameSwitches.value(625))return;
     this.regenerateAll();
     this.updateStateTurns();
     this.updateBuffTurns();
@@ -239,21 +280,36 @@ Scene_Map.prototype.startEncounterEffect = function() {
 
 Spriteset_Map.prototype.createLowerLayer = function() {
     Spriteset_Base.prototype.createLowerLayer.call(this);
+    if(!$gameSwitches.value(574)){
     //this.createParallax();
     //this.createTilemap();
     //this.createCharacters();
     //this.createShadow();
     //this.createDestination();
     //this.createWeather();
+    }else{
+    this.createTilemap();
+    this.createCharacters();
+    this.createShadow();
+    this.createDestination();
+    }
 };
+
+
 
 Spriteset_Map.prototype.update = function() {
     Spriteset_Base.prototype.update.call(this);
+    if(!$gameSwitches.value(574)){
     //this.updateTileset();
     //this.updateParallax();
     //this.updateTilemap();
     //this.updateShadow();
     //this.updateWeather();
+    }else{
+    this.updateTileset();
+    this.updateTilemap();
+    this.updateShadow();
+    }
 };
 
 Scene_Map.prototype.createDisplayObjects = function() {
@@ -439,6 +495,7 @@ Game_Party.prototype.rateSurprise = function(troopAgi) {
 
 Game_Player.prototype.moveByInput = function() {
     if (!this.isMoving() && this.canMove()) {
+    if(!$gameSwitches.value(574)){
         var direction = this.getInputDirection();
         if (direction > 0) {
 
@@ -460,8 +517,21 @@ Game_Player.prototype.moveByInput = function() {
         if (direction == 6) {
             $gameSwitches.setValue(84,true)
         }
+    }else{
+    	var direction = this.getInputDirection();
+        if (direction > 0) {
+            $gameTemp.clearDestination();
+        } else if ($gameTemp.isDestinationValid()){
+            var x = $gameTemp.destinationX();
+            var y = $gameTemp.destinationY();
+            direction = this.findDirectionTo(x, y);
+        }
+        if (direction > 0) {
+            this.executeMove(direction);
+        }
     }
-};
+    }
+    };
 
 Game_Action.prototype.itemEffectCommonEvent = function(target, effect) {
 $gameVariables.setValue(421,this.subject()._actorId)

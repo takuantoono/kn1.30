@@ -123,8 +123,49 @@ Moogle_X.EleBost.combineRate =
 // DataManager
 //=============================================================================
 
+Moogle_X.EleBost.DatabaseLoaded = false;
+Moogle_X.EleBost.DataManager_isDatabaseLoaded = DataManager.isDatabaseLoaded;
+DataManager.isDatabaseLoaded = function() {
+    if (!Moogle_X.EleBost.DataManager_isDatabaseLoaded.call(this)) return false;
+    if (!Moogle_X.EleBost.DatabaseLoaded) {
+        DataManager.readNotetags_EleBost($dataActors);
+        DataManager.readNotetags_EleBost($dataClasses);
+        DataManager.readNotetags_EleBost($dataEnemies);
+        DataManager.readNotetags_EleBost($dataWeapons);
+        DataManager.readNotetags_EleBost($dataArmors);
+        DataManager.readNotetags_EleBost($dataStates);
+        Moogle_X.EleBost.DatabaseLoaded = true;
+    }
+		return true;
+};
 
+DataManager.readNotetags_EleBost = function(group) {
+	var note = /<(?:ELEMENT BOOST)[ ](\d+):[ ](\d+)\%>/i;
+	for (var n = 1; n < group.length; n++) {
+		var obj = group[n];
+		var notedata = obj.note.split(/[\r\n]+/);
 
+		var code = Game_BattlerBase.TRAIT_ELEMENT_BOOST;
+
+		for (var i = 0; i < notedata.length; i++) {
+			var line = notedata[i];
+			if (line.match(note)) {
+        var elementId = Number(RegExp.$1);
+        var boostValue = Number(RegExp.$2) / 100;
+        var elementBoost = [{"code":code,"dataId":elementId,"value":boostValue}];
+        obj.traits = obj.traits.concat(elementBoost);
+      }
+		}
+	}
+};
+
+//=============================================================================
+// Game_BattlerBase
+//=============================================================================
+
+Game_BattlerBase.prototype.elementBoost = function(elementId) {
+    return this.traitsPi(Game_BattlerBase.TRAIT_ELEMENT_BOOST, elementId);
+};
 
 //=============================================================================
 // Game_Action
@@ -134,7 +175,6 @@ Moogle_X.EleBost.Game_Action_makeDamageValue =
     Game_Action.prototype.makeDamageValue;
 Game_Action.prototype.makeDamageValue = function(target, critical) {
     var value = Moogle_X.EleBost.Game_Action_makeDamageValue.call(this, target, critical);
-    console.log(this.subject())
     value *= this.calcElementBoost(this.subject());
     value = Math.round(value);
     return value;
@@ -152,14 +192,14 @@ Game_Action.prototype.elementsMaxBoostRate = function(subject, elements) {
     if (elements.length > 0) {
         if (Moogle_X.EleBost.combineBoost) {
             var boostList = elements.map(function(elementId) {
-                return  subject.elementBoost(elementId);
+                return subject.elementBoost(elementId);
             });
             return boostList.reduce(function(r, value) {
                 return r * value;
             }, 1);
         } else {
             return Math.max.apply(null, elements.map(function(elementId) {
-                return  subject.elementBoost(elementId);
+                return subject.elementBoost(elementId);
             }, this));
         }
 
@@ -174,7 +214,7 @@ Game_Action.prototype.elementsMaxRate = function(target, elements) {
     if (Moogle_X.EleBost.combineRate) {
         if (elements.length > 0) {
             var rateList = elements.map(function(elementId) {
-                return  target.elementRate(elementId);
+                return target.elementRate(elementId);
             });
             return rateList.reduce(function(r, value) {
                 return r * value;

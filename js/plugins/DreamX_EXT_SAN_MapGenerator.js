@@ -190,17 +190,20 @@ DreamX.EXT_SAN_MapGenerator = DreamX.EXT_SAN_MapGenerator || {};
 
     Game_MapGeneratorRoomAndPass.prototype.generateMap = function () {
         // change: _minRoomSize parameterized
-        this._minRoomSize = eval(paramMinRoomSize);
+        //this._minRoomSize = eval(paramMinRoomSize);
+        this._minRoomSize = $gameVariables.value(395);
         this._minBlockSize = this._minRoomSize + 2;
         // change: minRooms and maxRooms parameterized
         if (eval(paramMinRooms) >= 2) {
-            this._minRooms = eval(paramMinRooms);
+            //this._minRooms = eval(paramMinRooms);
+            this._minRooms = $gameVariables.value(397);
         }
         else {
             this._minRooms = 2;
         }
         if (eval(paramMaxRooms) >= 2) {
-            this._maxRooms = eval(paramMaxRooms);
+            //this._maxRooms = eval(paramMaxRooms);
+            this._maxRooms = $gameVariables.value(396);
         }
         else {
             this._maxRooms = 2;
@@ -276,8 +279,9 @@ DreamX.EXT_SAN_MapGenerator = DreamX.EXT_SAN_MapGenerator || {};
         var room = {x: 0, y: 0, w: 0, h: 0, hasStart: false, hasGoal: false};
         room.x = 1;
         room.y = 1 + this._wallHeight;
+        console.log($dataMap.width)
         room.w = $dataMap.width - 2;
-        room.h = $dataMap.height - (this._wallHeight + 1) * 2;
+        room.h = $dataMap.height - (this._wallHeight + 1) * 2 ;
         for (var oX = 0; oX < room.w; oX++) {
             for (var oY = 0; oY < room.h; oY++) {
                 this._symbolMap[oX + room.x][oY + room.y] = 'room';
@@ -331,6 +335,10 @@ DreamX.EXT_SAN_MapGenerator = DreamX.EXT_SAN_MapGenerator || {};
         this._blocks.forEach(function (block) {
             var roomW = this._minRoomSize + Math.randomInt(block.w - this._minRoomSize - 2);
             var roomH = this._minRoomSize + Math.randomInt(block.h - this._minRoomSize - 2);
+            if($gameSwitches.value(684)){
+            if(roomW > 3)roomW = 3;
+            if(roomH > 3)roomH = 3;
+            }
             var roomX = block.x + 1 + Math.randomInt(block.w - roomW - 2);
             var roomY = block.y + 1 + Math.randomInt(block.h - roomH - 2);
             // change: added hasStart and hasGoal to room

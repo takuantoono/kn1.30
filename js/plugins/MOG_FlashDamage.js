@@ -114,7 +114,7 @@ Game_Actor.prototype.performCollapse = function() {
 var _mog_flashDmg_enemy_performCollapse = Game_Enemy.prototype.performCollapse;
 Game_Enemy.prototype.performCollapse = function() {
 	if (this._flashDamage) {return};
-	if (this._flashDamageCol) {return}
+	if (this._flashDamageCol && !$gameSwitches.value(696)) {return}
     _mog_flashDmg_enemy_performCollapse.call(this);
 	this._flashDamageCol = true;
 };
@@ -130,6 +130,7 @@ var _mog_flashDamage_bngr_endAction = BattleManager.endAction;
 BattleManager.endAction = function() {
 	if (this._subject) {this._subject._flashDamage = false};
 	$gameTemp._flashDamage = false;
+	$gameSwitches.setValue(685, false);
     _mog_flashDamage_bngr_endAction.call(this);
 };
 
@@ -140,6 +141,9 @@ var _mog_flashDamage_bngr_invokeAction = BattleManager.invokeAction;
 BattleManager.invokeAction = function(subject, target) {	
     if (target._flashDamage) {return};
 	if (target._flashDamageDone) {return};
+	if ($gameSwitches.value(685)) {
+	return;
+	};
 	_mog_flashDamage_bngr_invokeAction.call(this,subject, target);
 };
 
@@ -148,7 +152,7 @@ BattleManager.invokeAction = function(subject, target) {
 //==============================	
 var _mog_flashDmg_startTurn = BattleManager.startTurn
 BattleManager.startTurn = function() {
-    this.clearFlashDmg();
+$gameSwitches.setValue(685, false);
     _mog_flashDmg_startTurn.call(this);
 };
 

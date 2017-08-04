@@ -75,7 +75,7 @@ Scene_Map.prototype.updateMain = function() {
     var active = this.isActive();
     $gameMap.update(active);
     $gamePlayer.update(active);
-    //$gameTimer.update(active);
+    if($gameSwitches.value(634)) $gameTimer.update(active);
     $gameScreen.update();
 };
 
@@ -100,7 +100,7 @@ Game_CharacterBase.prototype.update = function() {
     } else if (this.isMoving()) {
         this.updateMove();
     }
-    //this.updateAnimation();
+    this.updateAnimation();
 };
 
 Game_Player.prototype.update = function(sceneActive) {

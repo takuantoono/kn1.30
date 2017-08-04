@@ -609,17 +609,6 @@ Game_Action.prototype.isValid = function() {
         _Window_BattleLog_pushBaseLine.call(this);
     };
 
-    var _Window_BattleLog_popBaseLine = Window_BattleLog.prototype.popBaseLine;
-    Window_BattleLog.prototype.popBaseLine = function() {
-        //行動前イベント中なら何もしない
-        var phase_length = BMSP.EventBeforeAction.stackPhaseAction.length;
-        if(phase_length > 0){
-            var phase = BMSP.EventBeforeAction.stackPhaseAction[phase_length-1];
-            if(BMSP.EventBeforeAction.isEventBeforeActionPhase(phase)) {
-                return;
-            }
-        }
-        _Window_BattleLog_pushBaseLine.call(this);
-    };
+
 
 })();

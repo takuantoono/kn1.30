@@ -378,7 +378,9 @@ function Window_Automap() {
 		var y = 52;
 	    var width = 500;
 	    var height = this.lineHeight()*14-6;
-	    Window_Base.prototype.initialize.call(this, x, y, width, height);
+	    Window_Selectable.prototype.initialize.call(this, x, y, width, height);
+	    this.maxItem = 50;
+	    this.masCol = 50
 	};
 
 	Window_Automap.prototype.setText = function(str) {
@@ -405,6 +407,26 @@ function Window_Automap() {
     return false;
 	};
 	
+	Window_Automap.prototype.drawSmallIcon = function(index, x, y) {
+	if($gameSwitches.value(627)){
+    var iconIndex = index;
+    var bitmap = ImageManager.loadSystem('IconSet');
+    var pw = Window_Base._iconWidth;
+    var ph = Window_Base._iconHeight;
+    var sx = iconIndex % 16 * pw;
+    var sy = Math.floor(iconIndex / 16) * ph;
+    var dw = 6;
+    var dh = 6;
+    var dx = x;
+    var dy = y;
+    this.contents._context.imageSmoothingEnabled = false;
+    this.contents.blt(bitmap, sx, sy, pw, ph, dx, dy, dw, dh);
+    this.contents._context.imageSmoothingEnabled = true;
+    }else{
+    this.drawIcon(index, x, y);
+    }
+};
+	
 	// ウィンドウに載せる内容
 	Window_Automap.prototype.refresh = function() {
 	    this.contents.clear();
@@ -415,123 +437,242 @@ var idd = 0;
 var sid = 0;
 var tid = 0;
 var rid = 0;
-for (var i = 0; i < 400; i++) {
-if($gameVariables.value(2)[i]=="Z"){
+var sta = 0;
+var ms = 400;
+var xxx = 0;
+var yyy = 0;
+var twf = 24;
+var ttt = 3;
+
+if($gameSwitches.value(627)){
+ms = 10100;
+var twf = 4;
+var ttt = 0;
+}else{
+if($gameSwitches.value(626)){
+xp = $gamePlayer.x - 10;
+yp = $gamePlayer.y - 10;
+if(xp<0) xp = 0;
+if(yp<0) yp = 0;
+if(xp>80) xp = 80;
+if(yp>80) yp = 80;
+sta = xp + yp * 100
+ms = 2000;
+}
+}
+
+
+
+for (var i = 0; i < ms; i++) {
+if($gameVariables.value(2)[sta + i]=="Z"){
+if($gameSwitches.value(627)){
+x = i % 100;
+y = i / 100;
+x = Math.floor(x);
+y = Math.floor(y);
+xx = x * 4;
+yy = y * 4;
+xxx = x;
+yyy = y;
+}else{
+if($gameSwitches.value(626)){
+xxx = (sta + i) % 100;
+yyy = (sta + i) / 100;
+xxx = Math.floor(xxx);
+yyy = Math.floor(yyy);
+x = xxx - xp;
+y = yyy - yp;
+xx = x * 24;
+yy = y * 24;
+}else{
 x = i % 20;
 y = i / 20;
 x = Math.floor(x);
 y = Math.floor(y);
 xx = x * 24;
 yy = y * 24;
+xxx = x;
+yyy = y;
+};
+};
+
 if($gameSwitches.value(169)){
-x = (x+6)
-y = (y+7)
-}
+xxx += 6;
+yyy += 7;
+};
 if($gameSwitches.value(421)){
-x = (x+1)
-y = (y+1)
-}
-id = $gameMap.tileId(x, y, 0);
-rid = $gameMap.regionId(x, y);
-var ppap = $gameMap.eventIdXy(x, y);
+xxx += 1;
+yyy += 1;
+};
+id = $gameMap.tileId(xxx, yyy, 0);
+rid = $gameMap.regionId(xxx, yyy);
+var ppap = $gameMap.eventIdXy(xxx, yyy);
 if(this.tiaojian(rid, ppap)){
-this.drawIcon(335, xx + 3, yy + 3);
+this.drawSmallIcon(335, xx + ttt, yy + ttt);
 }else{
-if(id == 1569) this.drawIcon(320, xx + 3, yy + 3);
-if(id == 1577) this.drawIcon(321, xx + 3, yy + 3);
-if(id == 1570) this.drawIcon(322, xx + 3, yy + 3);
-if(id == 1578) this.drawIcon(323, xx + 3, yy + 3);
-if(id == 1579) this.drawIcon(324, xx + 3, yy + 3);
-if(id == 1571) this.drawIcon(325, xx + 3, yy + 3);
-if(id == 1580) this.drawIcon(326, xx + 3, yy + 3);
-if(id == 1581) this.drawIcon(327, xx + 3, yy + 3);
-if(id == 1583) this.drawIcon(328, xx + 3, yy + 3);
-if(id == 1582) this.drawIcon(329, xx + 3, yy + 3);
-if(id == 1584) this.drawIcon(330, xx + 3, yy + 3);
-if(id == 1585) this.drawIcon(331, xx + 3, yy + 3);
-if(id == 1586) this.drawIcon(332, xx + 3, yy + 3);
-if(id == 1587) this.drawIcon(333, xx + 3, yy + 3);
-if(id == 1576) this.drawIcon(334, xx + 3, yy + 3);
-if(id == 1552) this.drawIcon(335, xx + 3, yy + 3);
+if(!$dataMap.events[ppap]) {
+if(id == 1569) this.drawSmallIcon(320, xx + ttt, yy + ttt);
+if(id == 1577) this.drawSmallIcon(321, xx + ttt, yy + ttt);
+if(id == 1570) this.drawSmallIcon(322, xx + ttt, yy + ttt);
+if(id == 1578) this.drawSmallIcon(323, xx + ttt, yy + ttt);
+}else{
+if(id == 1569) {
+if($dataMap.events[ppap].meta.blue) {
+this.drawSmallIcon(337, xx + ttt, yy + ttt);
+}else{
+if($dataMap.events[ppap].meta.sebl && $gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
+this.drawSmallIcon(337, xx + ttt, yy + ttt);
+}else{
+this.drawSmallIcon(320, xx + ttt, yy + ttt);
 }
+}
+}
+if(id == 1577) {
+if($dataMap.events[ppap].meta.blue) {
+this.drawSmallIcon(338, xx + ttt, yy + ttt);
+}else{
+if($dataMap.events[ppap].meta.sebl && $gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
+this.drawSmallIcon(338, xx + ttt, yy + ttt);
+}else{
+this.drawSmallIcon(321, xx + ttt, yy + ttt);
+}
+}
+}
+if(id == 1570) {
+if($dataMap.events[ppap].meta.blue) {
+this.drawSmallIcon(339, xx + ttt, yy + ttt);
+}else{
+if($dataMap.events[ppap].meta.sebl && $gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
+this.drawSmallIcon(339, xx + ttt, yy + ttt);
+}else{
+this.drawSmallIcon(322, xx + ttt, yy + ttt);
+}
+}
+}
+if(id == 1578) {
+if($dataMap.events[ppap].meta.blue) {
+this.drawSmallIcon(340, xx + ttt, yy + ttt);
+}else{
+if($dataMap.events[ppap].meta.sebl && $gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
+this.drawSmallIcon(340, xx + ttt, yy + ttt);
+}else{
+this.drawSmallIcon(323, xx + ttt, yy + ttt);
+}
+}
+}
+}
+
+if(id == 1579) this.drawSmallIcon(324, xx + ttt, yy + ttt);
+if(id == 1571) this.drawSmallIcon(325, xx + ttt, yy + ttt);
+if(id == 1580) this.drawSmallIcon(326, xx + ttt, yy + ttt);
+if(id == 1581) this.drawSmallIcon(327, xx + ttt, yy + ttt);
+if(id == 1583) this.drawSmallIcon(328, xx + ttt, yy + ttt);
+if(id == 1582) this.drawSmallIcon(329, xx + ttt, yy + ttt);
+if(id == 1584) this.drawSmallIcon(330, xx + ttt, yy + ttt);
+if(id == 1585) this.drawSmallIcon(331, xx + ttt, yy + ttt);
+if(id == 1586) this.drawSmallIcon(332, xx + ttt, yy + ttt);
+if(id == 1587) this.drawSmallIcon(333, xx + ttt, yy + ttt);
+if(id == 1576) this.drawSmallIcon(334, xx + ttt, yy + ttt);
+if(id == 1552) this.drawSmallIcon(335, xx + ttt, yy + ttt);
+};
 
 if($gameSwitches.value(97)){
-tid = $gameMap.terrainTag(x, y);
-if(tid == 3) this.drawIcon(335, xx + 3, yy + 3);
-tid = $gameMap.terrainTag(x-1, y);
-if(tid == 1) this.drawIcon(346, xx + 3, yy + 3);
-tid = $gameMap.terrainTag(x+1, y);
-if(tid == 1) this.drawIcon(346, xx + 24, yy + 3);
-tid = $gameMap.terrainTag(x, y-1);
-if(tid == 1) this.drawIcon(345, xx + 3, yy + 3);
-tid = $gameMap.terrainTag(x, y+1);
-if(tid == 1) this.drawIcon(345, xx + 3, yy + 24);
+tid = $gameMap.terrainTag(xxx, yyy);
+if(tid == 3) this.drawSmallIcon(335, xx + ttt, yy + ttt);
+tid = $gameMap.terrainTag(xxx-1, yyy);
+if(tid == 1) this.drawSmallIcon(346, xx + ttt, yy + ttt);
+tid = $gameMap.terrainTag(xxx+1, yyy);
+if(tid == 1) this.drawSmallIcon(346, xx + twf, yy + ttt);
+tid = $gameMap.terrainTag(xxx, yyy-1);
+if(tid == 1) this.drawSmallIcon(345, xx + ttt, yy + ttt);
+tid = $gameMap.terrainTag(xxx, yyy+1);
+if(tid == 1) this.drawSmallIcon(345, xx + ttt, yy + twf);
 
-tid = $gameMap.eventIdXy(x-1, y);
-if($gameVariables.value(829)==x && $gameVariables.value(830)==y){
- this.drawIcon(336, xx + 3, yy + 3);
-}
-}
+tid = $gameMap.eventIdXy(xxx-1, yyy);
+if($gameVariables.value(829)==xxx && $gameVariables.value(830)==yyy){
+ this.drawSmallIcon(336, xx + ttt, yy + ttt);
+};
+};
 
 
 if($dataMap.events[ppap] && $gameSwitches.value(283)){
 if($dataMap.events[ppap].meta.wana>0){
- this.drawIcon(348, xx + 3, yy + 3);
+ this.drawSmallIcon(348, xx + ttt, yy + ttt);
 }
 }
 
 if($dataMap.events[ppap]){
 if($dataMap.events[ppap].meta.ent && $gameSelfSwitches.value([$gameMap._mapId, ppap, "E"])){
-     this.drawIcon(351, xx + 3, yy + 3);
+     this.drawSmallIcon(351, xx + ttt, yy + ttt);
     }
 if($dataMap.events[ppap].meta.hate && $gameSelfSwitches.value([$gameMap._mapId, ppap, "E"])){
-     this.drawIcon(823, xx + 3, yy + 3);
+     this.drawSmallIcon(823, xx + ttt, yy + ttt);
     }
 }
 
 
-idd = $gameMap.tileId(x-1, y, 0)
-rid = $gameMap.regionId(x-1, y);
-ppap = $gameMap.eventIdXy(x-1, y);
+idd = $gameMap.tileId(xxx-1, yyy, 0)
+rid = $gameMap.regionId(xxx-1, yyy);
+ppap = $gameMap.eventIdXy(xxx-1, yyy);
 if(this.tiaojian(rid, ppap)){
 }else{
 if(idd==1578 || idd==1579 || idd==1581 || idd==1582 ||
- idd==1584 || idd==1585 || idd==1587 || idd==1576) this.drawIcon(346, xx + 3, yy + 3);
+ idd==1584 || idd==1585 || idd==1587 || idd==1576) {
+ if($dataMap.events[ppap] && $dataMap.events[ppap].meta.blue) {
+ this.drawSmallIcon(913, xx + ttt, yy + ttt);
+ }else{
+ this.drawSmallIcon(346, xx + ttt, yy + ttt);
+ }}
 }
-idd = $gameMap.tileId(x+1, y, 0)
-rid = $gameMap.regionId(x+1, y);
-ppap = $gameMap.eventIdXy(x+1, y);
+idd = $gameMap.tileId(xxx+1, yyy, 0)
+rid = $gameMap.regionId(xxx+1, yyy);
+ppap = $gameMap.eventIdXy(xxx+1, yyy);
 if(this.tiaojian(rid, ppap)){
 }else{
 if(idd==1570 || idd==1579 || idd==1580 || idd==1583 ||
- idd==1584 || idd==1585 || idd==1586 || idd==1576) this.drawIcon(346, xx + 24, yy + 3);
+ idd==1584 || idd==1585 || idd==1586 || idd==1576) {
+ if($dataMap.events[ppap] && $dataMap.events[ppap].meta.blue) {
+ this.drawSmallIcon(913, xx + twf, yy + ttt);
+ }else{
+ this.drawSmallIcon(346, xx + twf, yy + ttt);
+ }}
 }
-idd = $gameMap.tileId(x, y-1, 0)
-rid = $gameMap.regionId(x, y-1);
-ppap = $gameMap.eventIdXy(x, y-1);
+idd = $gameMap.tileId(xxx, yyy-1, 0)
+rid = $gameMap.regionId(xxx, yyy-1);
+ppap = $gameMap.eventIdXy(xxx, yyy-1);
 if(this.tiaojian(rid, ppap)){
 }else{
 if(idd==1577 || idd==1571 || idd==1582 || idd==1583 ||
- idd==1585 || idd==1586 || idd==1587 || idd==1576) this.drawIcon(345, xx + 3, yy + 3);
+ idd==1585 || idd==1586 || idd==1587 || idd==1576) {
+ if($dataMap.events[ppap] && $dataMap.events[ppap].meta.blue) {
+ this.drawSmallIcon(912, xx + ttt, yy + ttt);
+ }else{
+ this.drawSmallIcon(345, xx + ttt, yy + ttt);
+ }}
 }
-idd = $gameMap.tileId(x, y+1, 0)
-rid = $gameMap.regionId(x, y+1);
-ppap = $gameMap.eventIdXy(x, y+1);
+idd = $gameMap.tileId(xxx, yyy+1, 0)
+rid = $gameMap.regionId(xxx, yyy+1);
+ppap = $gameMap.eventIdXy(xxx, yyy+1);
 if(this.tiaojian(rid, ppap)){
 }else{
 if(idd==1569 || idd==1571 || idd==1580 || idd==1581 ||
- idd==1584 || idd==1586 || idd==1587 || idd==1576) this.drawIcon(345, xx + 3, yy + 24);
+ idd==1584 || idd==1586 || idd==1587 || idd==1576) {
+ if($dataMap.events[ppap] && $dataMap.events[ppap].meta.blue) {
+ this.drawSmallIcon(912, xx + ttt, yy + twf);
+ }else{
+ this.drawSmallIcon(345, xx + ttt, yy + twf);
+ }}
  }
  
  
-rid = $gameMap.regionId(x, y);
-if(rid == 15)this.drawIcon(336, xx + 3, yy + 3);
+rid = $gameMap.regionId(xxx, yyy);
+if(rid == 15)this.drawSmallIcon(336, xx + ttt, yy + ttt);
 
-if(x == $gamePlayer.x && y == $gamePlayer.y){
-if($gamePlayer._direction == 8)this.drawIcon(341, xx + 3, yy + 3);
-if($gamePlayer._direction == 2)this.drawIcon(342, xx + 3, yy + 3);
-if($gamePlayer._direction == 4)this.drawIcon(343, xx + 3, yy + 3);
-if($gamePlayer._direction == 6)this.drawIcon(344, xx + 3, yy + 3);
+if(xxx == $gamePlayer.x && yyy == $gamePlayer.y){
+if($gamePlayer._direction == 8)this.drawSmallIcon(341, xx + ttt, yy + ttt);
+if($gamePlayer._direction == 2)this.drawSmallIcon(342, xx + ttt, yy + ttt);
+if($gamePlayer._direction == 4)this.drawSmallIcon(343, xx + ttt, yy + ttt);
+if($gamePlayer._direction == 6)this.drawSmallIcon(344, xx + ttt, yy + ttt);
 
 }
 

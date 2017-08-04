@@ -288,11 +288,27 @@ Game_MapGenerator.prototype.initSymbolMap = function() {
 };
 
 // シンボルによる通行可能判定（通行可否定義）
-Game_MapGenerator.prototype.isPassable = function(x, y) {
-    if (!this._symbolMap[x] || !this._symbolMap[x][y]) {
+Game_MapGenerator.prototype.isPassable = function(x, y, d) {
+    var x2 = $gameMap.roundXWithDirection(x, d);
+    var y2 = $gameMap.roundYWithDirection(y, d);
+    if (!this._symbolMap[x]  || !this._symbolMap[x][y] ||
+        !this._symbolMap[x2] || !this._symbolMap[x2][y2]) {
         return false;
     }
     return ['room', 'pass', 'start', 'goal', 'crawler'].indexOf(this._symbolMap[x][y]) !== -1;
+};
+
+// マップクラスの通行判定
+Sanshiro.Game_MapGenerator.Game_Map_isPassable = Game_Map.prototype.isPassable
+Game_Map.prototype.isPassable = function(x, y, d) {
+    if (this.isGenegratedMap()) {
+        return this._mapGenerator.isPassable(x, y, d);
+    }
+    return Sanshiro.Game_MapGenerator.Game_Map_isPassable.call(this, x, y, d);
+};
+
+Game_Map.prototype.isGenegratedMap = function() {
+    return !!this._mapGenerator && this._mapGenerator.isReady();
 };
 
 // マップ上における通行可能タイルの割合

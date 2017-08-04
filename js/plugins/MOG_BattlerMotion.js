@@ -467,6 +467,9 @@ Sprite_Battler.prototype.update_bmotion = function() {
 	   if (this._spriteShadow != null) {this._spriteShadow.update_shadow(this)};
 	   if (this._battler.isDead()) {return};
 	   if (this._battler._motion_damage_duration > 0) {this.update_motion_damage()};
+	   	if (!this._battler.canMove()) {
+	return
+	};
        if (this._battler.is_motionActing()) 
 	       {this.update_motion_action();}		    
 	   else 

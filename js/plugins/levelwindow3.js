@@ -19,8 +19,11 @@ Window_MenuCommand.prototype.makeCommandList = function() {
     this.addOriginalCommands();
     this.addOptionsCommand();
     //this.addSaveCommand();
+    this.addCommand(TextManager.cancel, 'cancel');
     this.addGameEndCommand();
 };
+
+
 
 Window_BattleStatus.prototype.numVisibleRows = function() {
     return 6;

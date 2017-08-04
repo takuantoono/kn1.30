@@ -32,6 +32,11 @@ var Saba;
             _Window_SkillList_makeItemList.call(this);
             this._data.sort(sortFunction);
         };
+        var _Window_SkillLearn_makeItemList = Window_SkillLearn.prototype.makeItemList;
+        Window_SkillLearn.prototype.makeItemList = function () {
+            _Window_SkillLearn_makeItemList.call(this);
+            this._data.sort(sortFunction);
+        };
         function sortFunction(a, b) {
             if (!a) {
                 return 1;
