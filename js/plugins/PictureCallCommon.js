@@ -267,32 +267,38 @@
                 commonId    = getArgNumber(args[1], 1, $dataCommonEvents.length - 1);
                 trigger     = getArgNumber(args[2], 1, 12);
                 transparent = (args.length > 3 ? getArgBoolean(args[3]) : null);
+                pictureId += 20;
                 $gameScreen.setPictureCallCommon(pictureId, commonId, trigger, transparent);
                 break;
             case 'P_CALL_CE_REMOVE' :
             case 'ピクチャのボタン化解除':
                 pictureId = getArgNumber(args[0], 1, $gameScreen.maxPictures());
+                pictureId += 20;
                 $gameScreen.setPictureRemoveCommon(pictureId);
                 break;
             case 'P_STROKE' :
             case 'ピクチャのなでなで設定':
                 pictureId   = getArgNumber(args[0], 1, $gameScreen.maxPictures());
+                pictureId += 20;
                 variableNum = getArgNumber(args[1], 1, $dataSystem.variables.length - 1);
                 $gameScreen.setPictureStroke(pictureId, variableNum);
                 break;
             case 'P_STROKE_REMOVE' :
             case 'ピクチャのなでなで解除':
                 pictureId = getArgNumber(args[0], 1, $gameScreen.maxPictures());
+                pictureId += 20;
                 $gameScreen.removePictureStroke(pictureId);
                 break;
             case 'P_POINTER' :
             case 'ピクチャのポインタ化':
                 pictureId = getArgNumber(args[0], 1, $gameScreen.maxPictures());
+                pictureId += 20;
                 $gameScreen.setPicturePointer(pictureId);
                 break;
             case 'P_POINTER_REMOVE' :
             case 'ピクチャのポインタ化解除':
                 pictureId = getArgNumber(args[0], 1, $gameScreen.maxPictures());
+                pictureId += 20;
                 $gameScreen.removePicturePointer(pictureId);
                 break;
         }

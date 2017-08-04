@@ -224,10 +224,15 @@
             case 'PA_START_LOOP' :
             case 'ピクチャのループアニメーション開始':
                 if($gameSwitches.value(168) || $gameSwitches.value(631)){
+<<<<<<< HEAD
+                   pictureNum     = 50 - $gameVariables.value(518);
+=======
                    pictureNum     = 50 - $gameVariables.value(518)
+>>>>>>> refs/remotes/origin/gh-pages
                   } else {
                    pictureNum     = getArgNumber(args[0], 1, $gameScreen.maxPictures());
                 }
+                pictureNum += 20;
                 animationType  = getArgNumber(args[1], 1, 3);
                 customArray    = getArgArrayNumber(args[2], 1, settings.maxCellAnimation);
                 picture        = $gameScreen.picture(pictureNum);
@@ -237,12 +242,17 @@
             case 'ピクチャのアニメーション終了':
                 pictureNum    = getArgNumber(args[0], 1, $gameScreen.maxPictures());
                 picture       = $gameScreen.picture(pictureNum);
+                pictureNum += 20;
                 if (picture) picture.stopAnimationFrame(false);
                 break;
             case 'PA_STOP_FORCE' :
             case 'ピクチャのアニメーション強制終了':
                 if($gameSwitches.value(168) || $gameSwitches.value(631)){
+<<<<<<< HEAD
+                   pictureNum     = 70 - $gameVariables.value(518)
+=======
                    pictureNum     = 50 - $gameVariables.value(518)
+>>>>>>> refs/remotes/origin/gh-pages
                   } else {
                    pictureNum    = getArgNumber(args[0], 1, $gameScreen.maxPictures());
                 }
@@ -296,18 +306,67 @@
         this._paDirection    = '';
         this._paFadeDuration = 0;
     };
+    
+    
+Game_Screen.prototype.showPicture = function(pictureId, name, origin, x, y,
+                                             scaleX, scaleY, opacity, blendMode) {
+    var realPictureId = this.realPictureId(pictureId);
+    if(!$gameSwitches.value(705))realPictureId += 20;
+    var picture = new Game_Picture();
+    picture.show(name, origin, x, y, scaleX, scaleY, opacity, blendMode);
+    this._pictures[realPictureId] = picture;
+};
+
+Game_Screen.prototype.movePicture = function(pictureId, origin, x, y, scaleX,
+                                             scaleY, opacity, blendMode, duration) {
+                                             pictureId += 20;
+    var picture = this.picture(pictureId);
+    if (picture) {
+        picture.move(origin, x, y, scaleX, scaleY, opacity, blendMode, duration);
+    }
+};
+
+Game_Screen.prototype.rotatePicture = function(pictureId, speed) {
+pictureId += 20;
+    var picture = this.picture(pictureId);
+    if (picture) {
+        picture.rotate(speed);
+    }
+};
+
+Game_Screen.prototype.tintPicture = function(pictureId, tone, duration) {
+pictureId += 20;
+    var picture = this.picture(pictureId);
+    if (picture) {
+        picture.tint(tone, duration);
+    }
+};
+
+Game_Screen.prototype.erasePicture = function(pictureId) {
+    if(!$gameSwitches.value(705)) pictureId += 20;
+    var realPictureId = this.realPictureId(pictureId);
+    this._pictures[realPictureId] = null;
+};
+
+Game_Screen.prototype.maxPictures = function() {
+    return 121;
+};
 
     var _Game_Screen_showPicture = Game_Screen.prototype.showPicture;
     Game_Screen.prototype.showPicture = function(pictureId, name, origin, x, y,
                                                  scaleX, scaleY, opacity, blendMode) {
         _Game_Screen_showPicture.apply(this, arguments);
         var realPictureId = this.realPictureId(pictureId);
+        if(!$gameSwitches.value(705))realPictureId += 20;
         if (this._paCellNumber > 1) {
             this._pictures[realPictureId].setAnimationFrameInit(
                 this._paCellNumber, this._paFrameNumber, this._paDirection, this._paFadeDuration);
             this.clearPicturesAnimation();
         }
     };
+    
+
+
 
     //=============================================================================
     // Game_Picture

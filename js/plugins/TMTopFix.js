@@ -52,7 +52,7 @@ Imported.TMTopFix = true;
   var _Window_MenuStatus_isCurrentItemEnabled =
       Window_MenuStatus.prototype.isCurrentItemEnabled;
   Window_MenuStatus.prototype.isCurrentItemEnabled = function() {
-    if ($gameSystem.isTopFix() && this._formationMode &&
+    if (this._formationMode &&
         this.index() === 5) {
       return false;
     } else {
