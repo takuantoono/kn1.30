@@ -1,6 +1,5 @@
 ﻿(function() {
 
-<<<<<<< HEAD
 Game_BattlerBase.prototype.canUse = function(item) {
 if ($gameSwitches.value(706)) return false;
     if (!item) {
@@ -14,8 +13,6 @@ if ($gameSwitches.value(706)) return false;
     }
 };
 
-=======
->>>>>>> refs/remotes/origin/gh-pages
 Game_Battler.prototype.gainHp = function(value) {
     this._result.hpDamage = -value;
     this._result.hpAffected = true;
