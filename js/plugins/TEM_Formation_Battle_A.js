@@ -155,17 +155,21 @@ Window_FStatus.prototype.drawItemStatus = function(index) {
     this.drawActorSimpleStatus(actor, x, y, width);
 };
 Window_FStatus.prototype.processOk = function() {
-
-    this.playOkSound();
+if (this.isCurrentItemEnabled()) {
+        this.playOkSound();
     this.updateInputData();
     this.deactivate();
     this.callOkHandler();
     $gameParty.setMenuActor($gameParty.allMembers()[this.index()]);
+    } else {
+        this.playBuzzerSound();
+    }
+    
 };
 
 Window_FStatus.prototype.isCurrentItemEnabled = function() {
-    if ($gameSystem.isTopFix() && this._formationMode &&
-        this.index() === 0) {
+    if (this._formationMode &&
+        this.index() === 5) {
       return false;
     } else {
       return true;

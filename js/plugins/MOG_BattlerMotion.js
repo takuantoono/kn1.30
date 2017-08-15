@@ -161,11 +161,13 @@ Game_Battler.prototype.is_motionActing = function() {
 // ** Set Battler Motion Data
 //==============================
 Game_Battler.prototype.set_battler_motion_data = function() {
+if (!Utils.isMobileDevice()){
 	for (var i = 0; i < this.notetags().length; i++) {		
 		if (this.notetags()[i] == "Breath Effect") {this._motion_breath[5] = true};
 		if (this.notetags()[i] == "Float Effect") {this._motion_fly[5] = true};
 		if (this.notetags()[i] == "Swing Effect") {this._motion_swing[5] = true};
 	};	
+	}
 };
 
 //==============================

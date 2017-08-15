@@ -150,6 +150,7 @@
     Window_ChoiceList.prototype.updateSelectPicture = function() {
         var visiblyId = -1;
         $gameMessage.getSelectPictures().iterate(function(key, id, index) {
+        id += 20;
             var picture = $gameScreen.picture(id);
             if (!picture) return;
             var compareResult = (index === this.index() || visiblyId === id);

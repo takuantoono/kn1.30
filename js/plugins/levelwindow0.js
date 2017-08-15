@@ -30,7 +30,7 @@ var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
 	var ed = $gameActors.actor($gameVariables.value(60)).isStateAffected(83)
 	var pp = 0; var ppp = 0;
 	if($gameParty.members()[$gameVariables.value(54)].isStateAffected(118)) pp += 15;
-	if($gameSwitches.value(399)) ppp += 40;
+	if($gameSwitches.value(399) && !$gameParty.members()[$gameVariables.value(54)].isStateAffected(253)) ppp += 40;
 	if($gameParty.members()[$gameVariables.value(54)]._equips[0]._itemId == 20 || $gameParty.members()[$gameVariables.value(54)]._equips[1]._itemId == 20) {
 	pp += 5;
 	if($gameParty.members()[$gameVariables.value(54)].isClass($dataClasses[5]))pp += 10;

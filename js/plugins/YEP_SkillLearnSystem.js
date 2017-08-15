@@ -892,6 +892,7 @@ Window_SkillLearn.prototype.meetsRequirements = function(skill) {
 };
 
 Window_SkillLearn.prototype.isEnabled = function(item) {
+if ($gameSwitches.value(779)) return false;
     if (!this._actor) return false;
     if (!item) return false;
     if (this._actor.isLearnedSkillRaw(item.id)) return false;
@@ -1845,8 +1846,10 @@ Scene_LearnSkill.prototype.createCommandWindow = function() {
     this._commandWindow.setHelpWindow(this._helpWindow);
     this._commandWindow.setHandler('class',    this.commandClass.bind(this));
     this._commandWindow.setHandler('cancel',   this.popScene.bind(this));
+    if (!$gameSwitches.value(779)) {
     this._commandWindow.setHandler('pagedown', this.nextActor.bind(this));
     this._commandWindow.setHandler('pageup',   this.previousActor.bind(this));
+    }
     this._commandWindow.setHelpWindow(this._helpWindow);
     this.addWindow(this._commandWindow);
 };
@@ -1870,7 +1873,7 @@ Scene_LearnSkill.prototype.createSkillLearnWindow = function() {
   this._skillLearnWindow.setHelpWindow(this._helpWindow);
   this._skillLearnWindow.setHandler('ok', this.onLearnOk.bind(this));
   this._skillLearnWindow.setHandler('cancel', this.onLearnCancel.bind(this));
-  if (!Imported.YEP_ClassChangeCore) {
+  if (!Imported.YEP_ClassChangeCore && !$gameSwitches.value(779)) {
     var win = this._skillLearnWindow
     win.setHandler('pagedown', this.onLearnPageDn.bind(this));
     win.setHandler('pageup',   this.onLearnPageUp.bind(this));

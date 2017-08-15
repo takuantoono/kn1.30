@@ -237,8 +237,13 @@
 		if($gameSwitches.value(24) && $gameSwitches.value(629)){
 			info.location =  $gameVariables.value(778);
 		}else{
+		if($gameSwitches.value(750)){
+			info.location =  $gameVariables.value(778);
+		}else{
 			info.location = $dataMap.displayName != "" ? $dataMap.displayName : $dataMapInfos[$gameMap.mapId()].name;
 		}
+		}
+		
 		info.level = $gameParty.members()[0].level;
 		info.gold = $gameParty.gold();
 		info.fileId = this._lastAccessedId;
@@ -324,7 +329,9 @@
 	// Amuseum new functions start
 	Window_SavefileList.prototype.drawLocation = function(info, x, y, width) {
 		if (info.location) {
+		this.contents.fontSize = 18;
 			this.drawText(info.location, x, y, width);
+			this.contents.fontSize = 25;
 		}
 	};
 
