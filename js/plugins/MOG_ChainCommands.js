@@ -455,6 +455,7 @@ BattleChainSprite.prototype.posY = function() {
 // * Times
 //==============================
 BattleChainSprite.prototype.times = function() {
+if (Utils.isMobileDevice()) return 0;
    return $gameTemp._bchainData[6];
 };
 
