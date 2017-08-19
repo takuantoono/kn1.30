@@ -119,23 +119,23 @@ this.drawIcon(79, 0, 0);
 }
 this.changeTextColor(this.textColor(16));
 if(!$gameSwitches.value(8)){
-this.drawText("　　　視界" ,35,0);
+this.drawText("　　　view" ,35,0);
 this.drawText($gameVariables.value(428) ,155,1);
 }
 else{
 if($gameVariables.value(430)==0){
-this.drawText("午前" ,35,0);
+this.drawText("AM" ,35,0);
 }
 if($gameVariables.value(430)==1){
-this.drawText("午後" ,35,0);
+this.drawText("PM" ,35,0);
 }
 if($gameVariables.value(430)==2){
-this.drawText("夜　：視界" ,35,0);
+this.drawText("Night：view" ,35,0);
 this.resetTextColor();
 this.drawText($gameVariables.value(428) ,155,1);
 }
 if($gameVariables.value(430)==3){
-this.drawText("深夜：視界" ,35,0);
+this.drawText("MidNight：view" ,35,0);
 this.resetTextColor();
 this.drawText($gameVariables.value(428) ,155,1);
 }
@@ -150,7 +150,7 @@ this.changeTextColor(this.textColor(16));
 }
 		
         
-		this.drawText("食料",200, 0);
+		this.drawText("food",200, 0);
 if($gameVariables.value(15)>=$gameVariables.value(423)){
 this.changeTextColor(this.textColor(3));
 }
@@ -168,7 +168,7 @@ this.changeTextColor(this.textColor(10));
 else{
 this.changeTextColor(this.textColor(16));
 }
-	  	this.drawText("元気",370, 0);
+	  	this.drawText("stamina",370, 0);
 if($gameVariables.value(16)>=$gameVariables.value(422)){
 this.changeTextColor(this.textColor(3));
 }
