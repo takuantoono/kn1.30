@@ -1,5 +1,23 @@
 ﻿(function() {
 
+BattleManager.invokeAction = function(subject, target) {
+    this._logWindow.push('pushBaseLine');
+    if (Math.random() < this._action.itemCnt(target)) {
+        this.invokeCounterAttack(subject, target);
+    } else if (Math.random() < this._action.itemMrf(target)) {
+        if(!target.isDead()){
+        this.invokeMagicReflection(subject, target);
+        }else{
+        this.invokeNormalAction(subject, target);
+        }
+    } else {
+        this.invokeNormalAction(subject, target);
+    }
+    subject.setLastTarget(target);
+    this._logWindow.push('popBaseLine');
+    this.refreshStatus();
+};
+
 BattleManager.updateTurnEnd = function() {
 	this._statusWindow.refresh();
     this.startInput();
@@ -43,13 +61,18 @@ var weapon = $dataWeapons[user._equips[0]._itemId]
 var weapon1 = $dataWeapons[user._equips[1]._itemId]
 if(weapon!=null){
 if(weapon.note.match(/<(?:middle)>/i)) condition = true;
+if(weapon.note.match(/<(?:backignore)>/i)) condition2 = true;
 }
 if(user._equips[1]._dataClass=="weapon"){
 if(weapon1.note.match(/<(?:middle)>/i)) condition = true;
+if(weapon1.note.match(/<(?:backignore)>/i)) condition2 = true;
 }
 }
+if(index==2&&condition2){
+$gameParty.members()[index].addNewState(72)
+}else{
 if(index==2&&!condition)$gameParty.members()[index].addNewState(73)
-
+}
 var condition = false;
 if(index==3){
 var user = $gameParty.members()[index]
@@ -61,13 +84,19 @@ condition = true;
 }else{
 }
 if(weapon.note.match(/<(?:back)>/i)) condition = true;
+if(weapon.note.match(/<(?:backignore)>/i)) condition2 = true;
 }
 if(user._equips[1]._dataClass=="weapon"){
 if(weapon1.note.match(/<(?:middle)>/i)) condition = true;
 if(weapon1.note.match(/<(?:back)>/i)) condition = true;
+if(weapon1.note.match(/<(?:backignore)>/i)) condition2 = true;
 }
 }
+if(index==3&&condition2){
+$gameParty.members()[index].addNewState(72)
+}else{
 if(index==3&&!condition)$gameParty.members()[index].addNewState(70)
+}
 var condition2 = false
 var condition = false;
 if(index==4){
