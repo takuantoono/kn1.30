@@ -187,6 +187,14 @@ if(!Yanfly.Core)
 var est_event_size_Game_Event_isCollidedWithEvents = Game_Event.prototype.isCollidedWithEvents
 Game_Event.prototype.isCollidedWithEvents = function(x, y) {
   var chk = est_event_size_Game_CharacterBase_isCollidedWithEvents.call(this, x, y);
+  if(!$gameSwitches.value(574)){
+  var nya = false;
+  nya = $dataMap.events[this._eventId].meta.trap
+  var events = $gameMap.eventsXyNt(x, y);
+  return events.some(function(event) {
+        return nya;
+    });
+    }
   var chk2 = this.check_events_size(x,y);
   var chk3 = this.isCollidedWithSelf(x,y);
   return (chk || chk2) && !chk3;

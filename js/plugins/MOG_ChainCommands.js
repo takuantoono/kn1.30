@@ -214,8 +214,15 @@ BattleManager.endAction = function() {
 		return;
 	  };
 	 _mog_bchain_bmngr_endAction.call(this);
+	 if(!$gameTemp._bchainTemp){
+	 for (var i = 10; i < 150; i++) {
+            	$gameScreen.erasePicture(i);
+        		}
+        		}
 	 $gameTemp.clearBchain();
 	 $gameTemp._bchainTemp = false;
+	 this._phase = 'turn';
+	 
 };
 
 //==============================
@@ -536,6 +543,9 @@ BattleChainSprite.prototype.check_key = function(value) {
 BattleChainSprite.prototype.setWrong = function(value) {
 	SoundManager.playBuzzer();
 	this.clearCommands();
+	for (var i = 10; i < 150; i++) {
+            	$gameScreen.erasePicture(i);
+        		}
 };
 
 //==============================

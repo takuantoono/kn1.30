@@ -465,12 +465,26 @@ Game_Action.prototype.isValid = function() {
                 break;
             default:
                 _BattleManager_endAction.call(this);
-                this._phase = 'turn';
                 break;
         }
     };
 
     BattleManager.startEventBeforeUseSkill = function(action, subject) {
+    
+    if(subject && subject.isActor()){
+	$gameVariables.setValue(844, -1);
+    $gameVariables.setValue(842, -1);
+    if(action._item._dataClass == "skill" && $dataSkills[action._item._itemId].scope>=7){
+    }else{
+    if(action._targetIndex>=0){
+    $gameVariables.setValue(842, $gameTroop.members()[action._targetIndex])
+    }
+    }
+    if(action._dualWieldTargets)$gameVariables.setValue(844, action._dualWieldTargets[0]);
+    if(action._subjectEnemyIndex>=0){
+    $gameVariables.setValue(844, $gameTroop.members()[action._subjectEnemyIndex]);
+    }
+    }
         BMSP.EventBeforeAction.stackPhaseUseSkill.push(this._phase);
         this._phase = 'eventBeforeUseSkill';
         event_ids = BMSP.EventBeforeAction.getBeforeUseSkillEvents(action, subject);
@@ -480,6 +494,13 @@ Game_Action.prototype.isValid = function() {
     BattleManager.updateEventBeforeUseSkill = function() {
         var event_ids = BMSP.EventBeforeAction.stackEventList[BMSP.EventBeforeAction.stackEventList.length-1];
         if (event_ids.length > 0){
+            if(this._subject.isActor()) {
+             $gameSwitches.setValue(807, false);
+            if(this._subject._actorId == $gameVariables.value(814)) $gameSwitches.setValue(807, true);
+            $gameVariables.setValue(814, this._subject._actorId);
+            }else{
+            $gameVariables.setValue(845, this._subject);
+            }
             $gameTemp.reserveCommonEvent(event_ids.shift());
         }else{
             this.endEventBeforeUseSkill();
@@ -511,6 +532,7 @@ Game_Action.prototype.isValid = function() {
     BattleManager.updateEventBeforeForcedUseSkill = function() {
         var event_ids = BMSP.EventBeforeAction.stackEventList[BMSP.EventBeforeAction.stackEventList.length-1];
         if (event_ids.length > 0){
+        if(this._subject && this._subject.isActor())$gameVariables.setValue(814, this._subject._actorId);
             $gameTemp.reserveCommonEvent(event_ids.shift());
         }else{
             this.endEventBeforeForcedUseSkill();
@@ -568,7 +590,8 @@ Game_Action.prototype.isValid = function() {
     BattleManager.updateEventBeforeForcedInvokeAction = function() {
         var event_ids = BMSP.EventBeforeAction.stackEventList[BMSP.EventBeforeAction.stackEventList.length-1];
         if (event_ids.length > 0){
-            $gameTemp.reserveCommonEvent(event_ids.shift());
+        if(this._subject && this._subject.isActor())$gameVariables.setValue(814, this._subject._actorId);
+                    $gameTemp.reserveCommonEvent(event_ids.shift());
         }else{
             this.endEventBeforeForcedInvokeAction();
         }

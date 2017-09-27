@@ -143,6 +143,7 @@ Game_Battler.prototype.set_motion_data = function() {
 // ** Clear Action Data
 //==============================
 Game_Battler.prototype.clear_action_data = function() {
+if(this._motion_action_data && this._motion_action_data[1] < 30) return;
 	this._motion_action_data = [0,0,0,0];
 	this._motion_action_xy = [0,0];
 	this._motion_action_scale = [0,0];
@@ -161,13 +162,11 @@ Game_Battler.prototype.is_motionActing = function() {
 // ** Set Battler Motion Data
 //==============================
 Game_Battler.prototype.set_battler_motion_data = function() {
-if (!Utils.isMobileDevice()){
 	for (var i = 0; i < this.notetags().length; i++) {		
 		if (this.notetags()[i] == "Breath Effect") {this._motion_breath[5] = true};
 		if (this.notetags()[i] == "Float Effect") {this._motion_fly[5] = true};
 		if (this.notetags()[i] == "Swing Effect") {this._motion_swing[5] = true};
 	};	
-	}
 };
 
 //==============================
@@ -177,6 +176,7 @@ var _alias_mog_bmotion_gbattler_onBattleStart = Game_Battler.prototype.onBattleS
 Game_Battler.prototype.onBattleStart = function() {
     _alias_mog_bmotion_gbattler_onBattleStart.call(this);
 	this.set_motion_data();
+	
 };
 
 //==============================
@@ -316,6 +316,7 @@ Game_Action.prototype.apply = function(target) {
 var _alias_mog_bmotion_spriteseBattle_createEnemies = Spriteset_Battle.prototype.createEnemies;
 Spriteset_Battle.prototype.createEnemies = function() {
 	this._sprite_shadow = [];
+	$gameVariables.setValue(854, false);
 	for (var i = 0; i < $gameTroop.members().length; i++) {this._sprite_shadow[i] = new SpriteBattlerShadow(),this._battleField.addChild(this._sprite_shadow[i])};
 	_alias_mog_bmotion_spriteseBattle_createEnemies.call(this)
 	for (var i = 0; i < this._enemySprites.length; i++) {
@@ -452,11 +453,8 @@ Sprite_Battler.prototype.updateMain = function() {
 // * Update Bmotion Position
 //==============================
 Sprite_Battler.prototype.update_bmotion_position = function() { 
-if(this._battler.isActor()) return
-
   this.x += this._battler.motion_Xaxis();
   this.y += this._battler.motion_Yaxis();
-  
   this.scale.x = this._battler.motion_ScaleX();
   this.scale.y = this._battler.motion_ScaleY();
   this.rotation = this._battler.motion_rotation();
@@ -468,10 +466,8 @@ if(this._battler.isActor()) return
 Sprite_Battler.prototype.update_bmotion = function() {
 	   if (this._spriteShadow != null) {this._spriteShadow.update_shadow(this)};
 	   if (this._battler.isDead()) {return};
+	   if (!this._battler.canMove()) {return};
 	   if (this._battler._motion_damage_duration > 0) {this.update_motion_damage()};
-	   	if (!this._battler.canMove()) {
-	return
-	};
        if (this._battler.is_motionActing()) 
 	       {this.update_motion_action();}		    
 	   else 
@@ -590,6 +586,7 @@ Sprite_Battler.prototype.update_motion_action = function() {
 //==============================
 Sprite_Battler.prototype.update_action_zoom = function() {
       this._battler._motion_action_data[1] += 1;
+      
 	  if (this._battler._motion_action_data[1] < 20) {
 	      this._battler._motion_action_scale[0] += 0.005;
 	  }
@@ -654,14 +651,15 @@ Sprite_Battler.prototype.update_action_swing_left = function() {
 // * Update Action Jump
 //==============================
 Sprite_Battler.prototype.update_action_jump = function() {
+if ($gameScreen.picture(110)) {return};
       this._battler._motion_action_data[1] += 1
 	  if (this._battler._motion_action_data[1] < 15) {
 
-		  this._battler._motion_action_xy[1] -= 6;
+		  this._battler._motion_action_xy[1] += 3;
 	  }	
 	  else if (this._battler._motion_action_data[1] < 30) {
         
-		  this._battler._motion_action_xy[1] += 6;
+		  this._battler._motion_action_xy[1] -= 3;
 	  }
 	  else {
 	      this._battler.clear_action_data();
@@ -674,14 +672,11 @@ Sprite_Battler.prototype.update_action_jump = function() {
 Sprite_Battler.prototype.update_action_frontal_attack = function() {
       this._battler._motion_action_data[1] += 1
 	  if (this._battler._motion_action_data[1] < 10) {
-          this._battler._motion_action_rotation -= 0.03
+          this._battler._motion_action_rotation -= 0.02
 	  }
-	  else if (this._battler._motion_action_data[1] < 30) {
-          this._battler._motion_action_rotation += 0.04
+	  else if (this._battler._motion_action_data[1] < 16) {
+          this._battler._motion_action_rotation += 0.03
 	  }	
-	  else if (this._battler._motion_action_data[1] < 40) {
-          this._battler._motion_action_rotation -= 0.06
-      }
 	  else {
 	      this._battler.clear_action_data();
       };
@@ -692,9 +687,12 @@ Sprite_Battler.prototype.update_action_frontal_attack = function() {
 //==============================
 Sprite_Battler.prototype.update_action_rotation = function() {
       this._battler._motion_action_data[1] += 1
-	  if (this._battler._motion_action_data[1] < 30) {
-          this._battler._motion_action_rotation += 0.2
-      }
+	  if (this._battler._motion_action_data[1] < 10) {
+          this._battler._motion_action_rotation += 0.02
+	  }
+	  else if (this._battler._motion_action_data[1] < 16) {
+          this._battler._motion_action_rotation -= 0.03
+	  }	
 	  else {
 	      this._battler.clear_action_data();
       };

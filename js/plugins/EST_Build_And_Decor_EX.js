@@ -622,6 +622,7 @@ Game_Interpreter.prototype.decor_move = function (selfSwitchEnd, cancelSelfSwitc
       mx = ev.x; 
       my = ev.y;
     }
+    console.log(ev)
   ev.locate(mx,my);
   if(!ev.decorCanPlaced(regionLimit)) ev._opacity = EST.Build_And_Decor.CannotBePlacedOpacity;
   if(ev.decorCanPlaced(regionLimit)) 

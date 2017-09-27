@@ -79,7 +79,7 @@ var _mog_dmgpop_gbat_initMembers = Game_Battler.prototype.initMembers;
 Game_Battler.prototype.initMembers = function() {
 	_mog_dmgpop_gbat_initMembers.call(this);
 	this._dmgOffsetX = 0;
-	this._dmgOffsetY = 0;
+	this._dmgOffsetY = -50;
 };
 
 //==============================

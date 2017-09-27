@@ -494,10 +494,25 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
 
     VictorEngine.DualWield.endAction = BattleManager.endAction;
     BattleManager.endAction = function() {
+    
         if (this._canFollowUp) {
             this.startFollowUpAction();
         } else if (this._canSecondAttack && !this._subject.isStateAffected(9) && !this._subject.isStateAffected(8) && !this._subject.isStateAffected(51)) {
+        var live = true
+        var targets = this._dualWieldTargets.filter(function(target) {
+        live = target.isAlive();    
+        });
+        for (var i = 10; i < 150; i++) {
+            	$gameScreen.erasePicture(i);
+        		}
+        		
+            if(live){
             this.startDualWieldAction();
+            }else{
+            this._isSecondAttack = false;
+            this._dualWieldAction = null;
+            VictorEngine.DualWield.endAction.call(this);
+            }
         } else {
             this._isSecondAttack = false;
             this._dualWieldAction = null;
@@ -622,6 +637,9 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
 	Game_Battler.prototype.useItem = function(item) {
 		if (!BattleManager.isSecondAttack()) {
 			VictorEngine.DualWield.useItem.call(this, item);
+			for (var i = 10; i < 150; i++) {
+            	$gameScreen.erasePicture(i);
+        		}
 		}
 	}
 	

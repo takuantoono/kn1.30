@@ -297,7 +297,7 @@
     
     Scene_Shop.prototype.buyingPrice = function() {
     if($gameVariables.value(791)>0){
-    return this._buyWindow.price(this._item) * $gameVariables.value(791) / 100;
+    return Math.round(this._buyWindow.price(this._item) * $gameVariables.value(791) / 100);
     }else{
     return this._buyWindow.price(this._item);
     }
@@ -381,6 +381,7 @@
         this.drawItemName(item, rect.x, rect.y, rect.width - priceWidth);
         if($gameVariables.value(791)>0){
     	var price = this.price(item) * $gameVariables.value(791) / 100;
+    	price = Math.round(price)
     	}else{
     	var price = this.price(item);
     	}

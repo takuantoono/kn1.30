@@ -44,7 +44,7 @@ var Saba;
             if (!b) {
                 return -1;
             }
-            var aId = a.id;
+            var aId = (a.originalBaseItemId) ? a.originalBaseItemId : (a.baseItemId) ? a.baseItemId : a.id;;
             var aValue = 0;
             var order = parseInt(a.meta.order);
             if (isNaN(order)) {
@@ -54,7 +54,7 @@ var Saba;
                 aValue = order * SORT_ID_WEIGHT;
                 aValue += aId;
             }
-            var bId = b.id;
+            var bId = (b.originalBaseItemId) ? b.originalBaseItemId : (b.baseItemId) ? b.baseItemId : b.id;
             var bValue = 0;
             order = parseInt(b.meta.order);
             if (isNaN(order)) {

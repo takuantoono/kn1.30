@@ -1,8 +1,58 @@
 (function() {
 
+Scene_Map.prototype.isFastForward = function() {
+  return false;
+};
 
+Sprite_Damage.prototype.setupCriticalEffect = function() {
+    	if(BattleManager._subject._dualWieldSpriteIndex!=2){
+    	for (var i = 109; i < 150; i++) {
+            	$gameScreen.erasePicture(i);
+        		}
+        		AudioManager.playSe({"name":"Explosion8","volume":100,"pitch":150,"pan":0})
+        		var mafu = BattleManager._subject._actorId;
+            if(mafu>5)mafu=6;
+    	var shiokara = mafu * 5 - 80;
+    	var yy = 0
+    	if(BattleManager._subject.isStateAffected(48)) yy = -50
+    	
+    	var xx = $gameVariables.value(843) - 20;
+    	
+        	$gameScreen.movePicture(109+shiokara,0,xx, 250 + yy, 170, 170, 1000,0,1);
+        	$gameScreen.movePicture(111+shiokara,0,xx, 250 + yy, 170, 170, 1000,0,1);
+        	$gameScreen.movePicture(110+shiokara,0,xx, 250 + yy, 170, 170, 1000,0,1);
+        	if(BattleManager._subject.equips()[0] && BattleManager._subject.equips()[0].note.match(/<(?:two handed weapon)>/i)){
+        	$gameScreen.movePicture(112+shiokara,0,xx+145, 255 + yy, -170, 170, 1000,0,1);
+        	}else{
+        	$gameScreen.movePicture(112+shiokara,0,xx+132, 248 + yy, -170, 170, 1000,0,1);
+        	}
+        	$gameScreen.movePicture(113+shiokara,0,xx, 250 + yy, 170, 170, 1000,0,1);
+        };
+        this._flashColor = [255, 0, 0, 160];
+    this._flashDuration = 60;
+};
 
-
+BattleManager.applySubstitute = function(target) {
+    if (this.checkSubstitute(target)) {
+        var substitute = target.friendsUnit().substituteBattler();
+        if (substitute && target !== substitute) {
+            var mafu = substitute._actorId;
+            if(mafu>5)mafu=6;
+        	var shiokara = mafu * 5 - 40;
+        	$gameScreen.movePicture(109+shiokara,0,380, 250, 170, 170, 1000,0,1);
+        	$gameScreen.movePicture(111+shiokara,0,380, 250, 170, 170, 1000,0,1);
+        	$gameScreen.movePicture(110+shiokara,0,380, 250, 170, 170, 1000,0,1);
+        	$gameScreen.movePicture(112+shiokara,0,380, 250, 170, 170, 1000,0,1);
+        	$gameScreen.movePicture(113+shiokara,0,380, 250, 170, 170, 1000,0,1);
+        	$gameScreen.movePicture(114+shiokara,0,380, 250, 170, 170, 1000,0,1);
+        	$gameScreen.movePicture(115+shiokara,0,380, 250, 170, 170, 1000,0,1);
+            $gameTemp.reserveCommonEvent(868);
+            this._logWindow.displaySubstitute(substitute, target);
+            return substitute;
+        }
+    }
+    return target;
+};
 
 Game_System.prototype.isJapanese = function() {
    return true;
@@ -71,7 +121,8 @@ this.drawText(this._actor._jp[this._actor._classId], 690, y, 40, 'right');
 var BattleManager_updateBattleEnd = BattleManager.updateBattleEnd;
 BattleManager.updateBattleEnd = function() {
 BattleManager_updateBattleEnd.call(this);
-
+$gameSwitches.setValue(826,true);
+$gameSwitches.setValue(326,true)
 var num = $gameVariables.value(15) - $gameTroop.turnCount() / 5;
 $gameVariables.setValue(15,num);
 var num = $gameVariables.value(16) - $gameTroop.turnCount() / 2 - 1;

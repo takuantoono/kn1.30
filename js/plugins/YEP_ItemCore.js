@@ -952,11 +952,11 @@ Game_Actor.prototype.hasBaseItem = function(baseItem) {
     for (var i = 0; i < this.equips().length; ++i) {
       var equip = this.equips()[i];
       if (!equip) continue;
-      if (!equip.baseItemId) continue;
+      if (!equip.originalBaseItemId) continue;
       if (DataManager.isWeapon(equip) && type === 'weapon') {
-        if (equip.baseItemId === baseItem.id) return true;
+        if (equip.originalBaseItemId === baseItem.id) return true;
       } else if (DataManager.isArmor(equip) && type === 'armor') {
-        if (equip.baseItemId === baseItem.id) return true;
+        if (equip.originalBaseItemId === baseItem.id) return true;
       }
     }
     return false;
@@ -1010,7 +1010,6 @@ Game_Party.prototype.setupStartingMembers = function() {
     Yanfly.Item.Game_Party_setupStartingMembers.call(this);
     $gameTemp.enableVarianceStock();
     var $gameWeight = false;
-    //console.log($gameWeight)
     this.initActorEquips();
     $gameTemp.disableVarianceStock();
 };
@@ -1206,8 +1205,8 @@ Game_Party.prototype.armors = function() {
 };
 
 Game_Party.prototype.independentItemSort = function(a, b) {
-    var aa = (a.baseItemId) ? a.baseItemId : a.id;
-    var bb = (b.baseItemId) ? b.baseItemId : b.id;
+    var aa = (a.originalBaseItemId) ? a.originalBaseItemId : a.id;
+    var bb = (b.originalBaseItemId) ? b.originalBaseItemId : b.id;
     if (aa < bb) return -1;
     if (aa >= bb) return 1;
     return 0;
@@ -1332,7 +1331,7 @@ Window_ItemList.prototype.listEquippedItems = function() {
       for (var i = 0; i < actor.equips().length; ++i) {
         var equip = actor.equips()[i];
         if (!equip) continue;
-        if (!equip.baseItemId) continue;
+        if (!equip.a.originalBaseItemId) continue;
         if (this.includes(equip)) results.push(equip);
       }
     }
