@@ -1,5 +1,10 @@
 ﻿(function() {
 
+Game_Battler.prototype.initTp = function() {
+    //this.setTp(Math.randomInt(25));
+};
+
+
 Game_BattlerBase.prototype.canUse = function(item) {
 if ($gameSwitches.value(706)) return false;
     if (!item) {
@@ -18,6 +23,16 @@ Game_Battler.prototype.gainHp = function(value) {
     this._result.hpAffected = true;
     this._flashDamageCol = false;
     this.setHp(this.hp + value);
+};
+
+Game_Action.prototype.setSubject = function(subject) {
+    if (subject.isActor()) {
+        this._subjectActorId = subject.actorId();
+        this._subjectEnemyIndex = -1;
+    } else {
+        this._subjectEnemyIndex = subject.index();
+        this._subjectActorId = 0;
+    }
 };
 
 
@@ -41,12 +56,95 @@ var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
 	if(id == 1 && $gameVariables.value(92) < (15 + p + pp + (ppp * 2)) && $gameVariables.value(6) < 50 && $gameVariables.value(91) > 0) $gameSwitches.setValue(177, true)
 	if(id == 2 && $gameVariables.value(92) < (25 + p + pp + (ppp * 2)) && $gameVariables.value(91) < 1) $gameSwitches.setValue(177, true)
 	};
+    };
+    
+    if (command === 'picChara') {
+    var no = $gameVariables.value(809);
+	var name = $gameVariables.value(519);
+	var x =  $gameVariables.value(520);
+	var y = $gameVariables.value(521);
+	var wide = $gameVariables.value(522);
+	var hight = $gameVariables.value(532);
+	var suke = $gameVariables.value(803);
+	var type = $gameVariables.value(805);
+	$gameScreen.showPicture(no, name, 0, x, y, wide, hight, suke, type);
+    };
+    if (command === 'picChara2') {
+    var no = $gameVariables.value(809);
+	var name = $gameVariables.value(519);
+	var x =  $gameVariables.value(520);
+	var y = $gameVariables.value(521);
+	var wide = $gameVariables.value(522);
+	var hight = $gameVariables.value(532);
+	var suke = 0;
+	var type = $gameVariables.value(805);
+	$gameScreen.showPicture(no, name, 0, x, y, wide, hight, suke, type);
+    };
+    if (command === 'picChara3') {
+    var no = $gameVariables.value(809);
+	var name = $gameVariables.value(519);
+	var x =  $gameVariables.value(520);
+	var y = $gameVariables.value(521);
+	var wide = $gameVariables.value(522);
+	var hight = $gameVariables.value(532);
+	var suke = $gameVariables.value(803);
+	var type = $gameVariables.value(805);
+	$gameScreen.showPicture(no, name, 1, x, y, wide, hight, suke, type);
+    };
+    if (command === 'picMove') {
+    var no = $gameVariables.value(809);
+	var x =  $gameVariables.value(520);
+	var y = $gameVariables.value(521);
+	var wide = $gameVariables.value(522);
+	var hight = $gameVariables.value(532);
+	var suke = $gameVariables.value(803);
+	var time = $gameVariables.value(519);
+	var type = $gameVariables.value(805);
+	$gameScreen.movePicture(no,0,x, y, wide, hight, suke,type,time);
+    };
+    
+    
+    if (command === 'resetWeight') {
+    $gameVariables.setValue(146, 0);
+    var i = 0;
+    var items = Object.keys($gameParty._items);
+    var id = items[i];
+    var item
+    var num
+    while (id) {
+    item = $dataItems[id];
+    num = $gameParty._items[id]
+    if(item && item.meta.Weight)$gameVariables.setFloatValue(146, $gameVariables.value(146) + item.meta.Weight * num);
+    i = i + 1
+    var id = items[i];
     }
+    i = 0;
+    items = Object.keys($gameParty._weapons);
+    id = items[i];
+    while (id) {
+    item = $dataWeapons[id];
+    num = $gameParty._weapons[id]
+    if(item && item.meta.Weight && item.wtypeId != 14)$gameVariables.setFloatValue(146, $gameVariables.value(146) + item.meta.Weight * num);
+    i = i + 1
+    var id = items[i];
+    }
+    i = 0;
+    items = Object.keys($gameParty._armors);
+    id = items[i];
+    while (id) {
+    item = $dataArmors[id];
+    num = $gameParty._armors[id]
+    if(item && item.meta.Weight && item.wtypeId != 7)$gameVariables.setFloatValue(146, $gameVariables.value(146) + item.meta.Weight * num);
+    i = i + 1
+    var id = items[i];
+    }
+
+    };
   };
 
 Sprite_Timer.prototype.updatePosition = function() {
     this.x = 60;
-    this.y = 100;
+    this.y = 70;
 };
 
 Window_ActorCommand.prototype.addSkillCommands = function() {
@@ -123,6 +221,9 @@ BattleManager.endBattle = function(result) {
     if (this._eventCallback) {
         this._eventCallback(result);
     }
+    for (var i = 10; i < 150; i++) {
+            	$gameScreen.erasePicture(i);
+        		}
     if (result === 0) {
         $gameSystem.onBattleWin();
     } else if (this._escaped) {
@@ -393,10 +494,18 @@ Scene_Battle.prototype.onSkillCancel = function() {
 };
 
 ImageManager.loadPicture = function(filename, hue) {
+if ($gameSwitches.value(837)) {
+return this.loadBitmap('img/enemies/', filename, hue, true);
+}else{
 if ( filename.match(/3d/)) {
     return this.loadBitmap('img/pictures/textures/', filename, hue, true);
 }else{
+if ( filename.match(/efc/)) {
+    return this.loadBitmap('img/pictures/effects/', filename, hue, true);
+}else{
     return this.loadBitmap('img/pictures/', filename, hue, true);
+}
+}
 }
 };
 

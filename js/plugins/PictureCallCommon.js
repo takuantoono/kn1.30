@@ -261,6 +261,15 @@
         _Game_Interpreter_pluginCommand.call(this, command, args);
         var pictureId, commonId, trigger, variableNum, transparent;
         switch (getCommandName(command)) {
+        	case 'P_CALL_CE_F' :
+            case 'ピクチャのボタン化F':
+                pictureId   = $gameVariables.value(812);
+                commonId    = $gameVariables.value(813);
+                trigger     = getArgNumber(args[2], 1, 12);
+                transparent = (args.length > 3 ? getArgBoolean(args[3]) : null);
+                pictureId += 20;
+                $gameScreen.setPictureCallCommon(pictureId, commonId, trigger, transparent);
+                break;
             case 'P_CALL_CE' :
             case 'ピクチャのボタン化':
                 pictureId   = getArgNumber(args[0], 1, $gameScreen.maxPictures());

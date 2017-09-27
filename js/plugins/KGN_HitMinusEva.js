@@ -77,6 +77,7 @@ Game_Action.prototype.apply = function(target) {
 			this.applyItemEffect(target, effect);
 		}, this);
 		this.applyItemUserEffect(target);
+		if(this.item().id == 116) this.subject()._nigro = true;
 	}
 	
 	

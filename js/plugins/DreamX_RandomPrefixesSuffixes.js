@@ -1393,6 +1393,7 @@ DreamX.RandomPrefixSuffix = DreamX.RandomPrefixSuffix || {};
         if (newItem._DXHighestParamBonus && newItem._DXHighestParamBonus !== 0) {
             var sign = newItem._DXHighestParamBonus > 0 ? "+" : "";
             var bonusParamText = paramBonusParamText.format(sign, newItem._DXHighestParamBonus);
+            
             newItem.name = newItem.name + " " + bonusParamText;
             delete newItem._DXHighestParamBonus;
             delete newItem._DXHighestParamID;

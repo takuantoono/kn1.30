@@ -40,7 +40,7 @@ var _Scene_Map_update = Scene_Map.prototype.update;
     Scene_Map.prototype.update = function() {
         _Scene_Map_update.call(this);
 
-if($gameSwitches.value(269)){
+if($gameSwitches.value(269)&&!$gameSwitches.value(825)){
 		this._AutomapWindow.show();
         this._AutomapWindow.setText();
 }
@@ -119,23 +119,23 @@ this.drawIcon(79, 0, 0);
 }
 this.changeTextColor(this.textColor(16));
 if(!$gameSwitches.value(8)){
-this.drawText("　　　view" ,35,0);
+this.drawText("　　　視界" ,35,0);
 this.drawText($gameVariables.value(428) ,155,1);
 }
 else{
 if($gameVariables.value(430)==0){
-this.drawText("AM" ,35,0);
+this.drawText("午前" ,35,0);
 }
 if($gameVariables.value(430)==1){
-this.drawText("PM" ,35,0);
+this.drawText("午後" ,35,0);
 }
 if($gameVariables.value(430)==2){
-this.drawText("Night：view" ,35,0);
+this.drawText("夜　：視界" ,35,0);
 this.resetTextColor();
 this.drawText($gameVariables.value(428) ,155,1);
 }
 if($gameVariables.value(430)==3){
-this.drawText("MidNight：view" ,35,0);
+this.drawText("深夜：視界" ,35,0);
 this.resetTextColor();
 this.drawText($gameVariables.value(428) ,155,1);
 }
@@ -150,7 +150,7 @@ this.changeTextColor(this.textColor(16));
 }
 		
         
-		this.drawText("food",200, 0);
+		this.drawText("食料",200, 0);
 if($gameVariables.value(15)>=$gameVariables.value(423)){
 this.changeTextColor(this.textColor(3));
 }
@@ -168,7 +168,7 @@ this.changeTextColor(this.textColor(10));
 else{
 this.changeTextColor(this.textColor(16));
 }
-	  	this.drawText("stamina",370, 0);
+	  	this.drawText("元気",370, 0);
 if($gameVariables.value(16)>=$gameVariables.value(422)){
 this.changeTextColor(this.textColor(3));
 }
@@ -389,6 +389,7 @@ function Window_Automap() {
 	};
 	
 	Window_Automap.prototype.tiaojian = function(rid, ppap) {
+	this._hasen = false;
 	if($dataMap.events[ppap] && rid == 76 && $gameSelfSwitches.value([$gameMap._mapId, ppap, "B"])){
     return true;
     }
@@ -402,6 +403,7 @@ function Window_Automap() {
     return true;
     }
     if(rid == 69 || rid == 68 || rid == 70 || rid == 81){
+    this._hasen = true;
     return true;
     }
     return false;
@@ -508,7 +510,14 @@ id = $gameMap.tileId(xxx, yyy, 0);
 rid = $gameMap.regionId(xxx, yyy);
 var ppap = $gameMap.eventIdXy(xxx, yyy);
 if(this.tiaojian(rid, ppap)){
+if(this._hasen){
+if(id == 1569) this.drawSmallIcon(944, xx + ttt, yy + ttt);
+if(id == 1577) this.drawSmallIcon(945, xx + ttt, yy + ttt);
+if(id == 1570) this.drawSmallIcon(946, xx + ttt, yy + ttt);
+if(id == 1578) this.drawSmallIcon(947, xx + ttt, yy + ttt);
+}else{
 this.drawSmallIcon(335, xx + ttt, yy + ttt);
+}
 }else{
 if(!$dataMap.events[ppap]) {
 if(id == 1569) this.drawSmallIcon(320, xx + ttt, yy + ttt);
@@ -520,8 +529,8 @@ if(id == 1569) {
 if($dataMap.events[ppap].meta.blue) {
 this.drawSmallIcon(337, xx + ttt, yy + ttt);
 }else{
-if($dataMap.events[ppap].meta.sebl && $gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
-this.drawSmallIcon(337, xx + ttt, yy + ttt);
+if($gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
+this.drawSmallIcon(914, xx + ttt, yy + ttt);
 }else{
 this.drawSmallIcon(320, xx + ttt, yy + ttt);
 }
@@ -531,8 +540,8 @@ if(id == 1577) {
 if($dataMap.events[ppap].meta.blue) {
 this.drawSmallIcon(338, xx + ttt, yy + ttt);
 }else{
-if($dataMap.events[ppap].meta.sebl && $gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
-this.drawSmallIcon(338, xx + ttt, yy + ttt);
+if($gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
+this.drawSmallIcon(915, xx + ttt, yy + ttt);
 }else{
 this.drawSmallIcon(321, xx + ttt, yy + ttt);
 }
@@ -542,8 +551,8 @@ if(id == 1570) {
 if($dataMap.events[ppap].meta.blue) {
 this.drawSmallIcon(339, xx + ttt, yy + ttt);
 }else{
-if($dataMap.events[ppap].meta.sebl && $gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
-this.drawSmallIcon(339, xx + ttt, yy + ttt);
+if($gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
+this.drawSmallIcon(916, xx + ttt, yy + ttt);
 }else{
 this.drawSmallIcon(322, xx + ttt, yy + ttt);
 }
@@ -553,13 +562,14 @@ if(id == 1578) {
 if($dataMap.events[ppap].meta.blue) {
 this.drawSmallIcon(340, xx + ttt, yy + ttt);
 }else{
-if($dataMap.events[ppap].meta.sebl && $gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
-this.drawSmallIcon(340, xx + ttt, yy + ttt);
+if($gameSelfSwitches.value([$gameMap._mapId, ppap, "SB"])) {
+this.drawSmallIcon(917, xx + ttt, yy + ttt);
 }else{
 this.drawSmallIcon(323, xx + ttt, yy + ttt);
 }
 }
 }
+
 }
 
 if(id == 1579) this.drawSmallIcon(324, xx + ttt, yy + ttt);

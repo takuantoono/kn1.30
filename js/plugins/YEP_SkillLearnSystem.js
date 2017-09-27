@@ -1846,7 +1846,7 @@ Scene_LearnSkill.prototype.createCommandWindow = function() {
     this._commandWindow.setHelpWindow(this._helpWindow);
     this._commandWindow.setHandler('class',    this.commandClass.bind(this));
     this._commandWindow.setHandler('cancel',   this.popScene.bind(this));
-    if (!$gameSwitches.value(779) || !$gameSwitches.value(781)) {
+    if (!$gameSwitches.value(779) && !$gameSwitches.value(857)) {
     this._commandWindow.setHandler('pagedown', this.nextActor.bind(this));
     this._commandWindow.setHandler('pageup',   this.previousActor.bind(this));
     }
@@ -1873,7 +1873,7 @@ Scene_LearnSkill.prototype.createSkillLearnWindow = function() {
   this._skillLearnWindow.setHelpWindow(this._helpWindow);
   this._skillLearnWindow.setHandler('ok', this.onLearnOk.bind(this));
   this._skillLearnWindow.setHandler('cancel', this.onLearnCancel.bind(this));
-  if (!Imported.YEP_ClassChangeCore && !$gameSwitches.value(779) || !$gameSwitches.value(781)) {
+  if (!Imported.YEP_ClassChangeCore && !$gameSwitches.value(779) && !$gameSwitches.value(857)) {
     var win = this._skillLearnWindow
     win.setHandler('pagedown', this.onLearnPageDn.bind(this));
     win.setHandler('pageup',   this.onLearnPageUp.bind(this));

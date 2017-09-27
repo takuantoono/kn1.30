@@ -405,6 +405,7 @@ Game_Battler.prototype.onBattleStart = function() {
     Yanfly.JP.Game_Battler_onBattleStart.call(this);
     $gameSwitches.setValue(535, false);
 		this._battleJp = 0;
+		
 };
 
 Yanfly.JP.Game_Battler_onBattleEnd = Game_Battler.prototype.onBattleEnd;
