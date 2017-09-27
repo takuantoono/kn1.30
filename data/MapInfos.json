@@ -1,11 +1,7 @@
 [
 null,
 {"id":1,"expanded":true,"name":"GenerateBaseMapMaze2","order":7,"parentId":7,"scrollX":798,"scrollY":641},
-<<<<<<< HEAD
-{"id":2,"expanded":true,"name":"start","order":38,"parentId":0,"scrollX":798,"scrollY":639},
-=======
 {"id":2,"expanded":true,"name":"start","order":38,"parentId":0,"scrollX":1398,"scrollY":893},
->>>>>>> refs/remotes/origin/master
 {"id":3,"expanded":true,"name":"沈星(裏/R1)","order":27,"parentId":4,"scrollX":1382,"scrollY":877},
 {"id":4,"expanded":true,"name":"沈星(表/R1)","order":26,"parentId":0,"scrollX":1378,"scrollY":893},
 {"id":5,"expanded":true,"name":"センバリスの滝近辺","order":29,"parentId":0,"scrollX":798,"scrollY":639},
