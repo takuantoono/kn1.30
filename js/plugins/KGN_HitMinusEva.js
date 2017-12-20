@@ -68,8 +68,9 @@ Game_Action.prototype.apply = function(target) {
 			}
 			$gameSwitches.setValue(233, false);
 			if($gameSwitches.value(232)) $gameSwitches.setValue(233, true);
-			
-			result.critical = (Math.random() < this.itemCri(target));
+			var critoris = this.itemCri(target);
+			if(critoris < 0.05 && $gameVariables.value(255) == 1) critoris = 0.02;
+			result.critical = (Math.random() < critoris);
 			var value = this.makeDamageValue(target, result.critical);
 			this.executeDamage(target, value);
 		}

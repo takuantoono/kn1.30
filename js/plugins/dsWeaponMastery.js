@@ -260,6 +260,13 @@ var dsWeaponMastery = {};
 			var wtypeId    = Number(args[2]);
 			this.getWMLevel(variableId, actorId, wtypeId);
 		}
+		else if ( command === 'GetWMLevelFuck' )
+		{
+			var variableId = Number(args[0]);
+			var actorId    = $gameVariables.value(60);
+			var wtypeId    = $gameVariables.value(66);
+			this.getWMLevel(variableId, actorId, wtypeId);
+		}
 	};
 
 	Game_Interpreter.prototype.changeWMAptitude = function(iteType, param, wtypeId, opeType, operand)
@@ -765,6 +772,8 @@ var dsWeaponMastery = {};
 		var color1 = this.wmColor1();
 		var color2 = this.wmColor2();
 		var color3 = this.lvColor();
+		console.log(wtypeId)
+		console.log(actor.wmExpRate(wtypeId))
 		this.drawGauge(x1, y, gaugeWidth, actor.wmExpRate(wtypeId), color1, color2);
 		this.drawIcon(this.wmIcon(wtypeId), x + 2, y + 2);
 		this.changeTextColor(this.systemColor());

@@ -411,7 +411,7 @@ ItemManager.applyIUSEffects = function(mainItem, effectItem) {
 };
 
 ItemManager.payIUSEffects = function(mainItem, effectItem) {
-    $gameParty.loseItem(effectItem, 1);
+    //$gameParty.loseItem(effectItem, 1);
     mainItem.upgradeSlots -= effectItem.upgradeSlotCost;
     this.addIUSLine(mainItem, effectItem);
     for (var i = 1; i < effectItem.upgradeSlotCost; ++i) {
@@ -472,7 +472,8 @@ ItemManager.processIUSEffect = function(line, mainItem, effectItem) {
     }
     // PRIORITY NAME: X
     if (line.match(/PRIORITY NAME:[ ](.*)/i)) {
-      var value = String(RegExp.$1);
+      //var value = String(RegExp.$1);
+      var value = $gameVariables.value(867);
       return this.effectIUSPriorityName(mainItem, value);
     }
     // NAME: X

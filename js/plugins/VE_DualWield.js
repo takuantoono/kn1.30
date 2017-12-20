@@ -490,11 +490,11 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
         this.setDualWieldAction();
         VictorEngine.DualWield.startAction.call(this);
         this.setSecondAttack();
+        $gameSwitches.setValue(858, false);
     };
 
     VictorEngine.DualWield.endAction = BattleManager.endAction;
     BattleManager.endAction = function() {
-    
         if (this._canFollowUp) {
             this.startFollowUpAction();
         } else if (this._canSecondAttack && !this._subject.isStateAffected(9) && !this._subject.isStateAffected(8) && !this._subject.isStateAffected(51)) {
@@ -502,15 +502,16 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
         var targets = this._dualWieldTargets.filter(function(target) {
         live = target.isAlive();    
         });
-        for (var i = 10; i < 150; i++) {
+        for (var i = 10; i < 280; i++) {
             	$gameScreen.erasePicture(i);
         		}
-        		
+        		$gameSwitches.setValue(858, false);
             if(live){
             this.startDualWieldAction();
             }else{
             this._isSecondAttack = false;
             this._dualWieldAction = null;
+            this._canSecondAttack = false;
             VictorEngine.DualWield.endAction.call(this);
             }
         } else {
@@ -534,9 +535,26 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
         }
     };
 
-    BattleManager.startDualWieldAction = function() {
+    Game_Actor.prototype.attackSkillId2 = function() {
+    var normalId = Game_BattlerBase.prototype.attackSkillId.call(this);
+    if(this.hasNoWeapons()){
+      return normalId;
+    }
+    var weapon = this.weapons()[1];
+    var id = false;
+    if(weapon) id = weapon.meta.skill_id;
+    return id ? Number(id) : normalId;
+  };
+
+    BattleManager.startDualWieldAction = function()   {
+    if(!this._subject) return;
         var action = new Game_Action(this._subject);
-        action.setSkill(this._dualWieldAction);
+        action.setSkill(this._subject.attackSkillId2());
+        if(action.isForOne() && BattleManager.gancai){
+        this._dualWieldTargets = BattleManager.gancai;
+        }else{
+        this._dualWieldTargets = action.makeTargets(action)
+        }
         action.setDualWieldTargets(this._dualWieldTargets)
         this._subject.addNewAction(action);
         this._dualWieldTargets = [];
@@ -567,7 +585,9 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
         if (this._dualWieldTargets) {
             return this._dualWieldTargets;
         } else {
-            return VictorEngine.DualWield.makeTargets.call(this)
+            var action = VictorEngine.DualWield.makeTargets.call(this);
+            BattleManager.gancai = action.clone();
+            return action;
         }
     };
 
@@ -637,9 +657,7 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
 	Game_Battler.prototype.useItem = function(item) {
 		if (!BattleManager.isSecondAttack()) {
 			VictorEngine.DualWield.useItem.call(this, item);
-			for (var i = 10; i < 150; i++) {
-            	$gameScreen.erasePicture(i);
-        		}
+			
 		}
 	}
 	
@@ -729,6 +747,14 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
         result += this.doubleGripParamPlus(paramId);
         result += this.bareHandedParamPlus(paramId);
         result += this.offHandParamPlus(paramId);
+        result += this.weapon0HpPlus(paramId);
+        result += this.weapon1HpPlus(paramId);
+        result += this.weapon0AtPlus(paramId);
+        result += this.weapon1AtPlus(paramId);
+        result += this.hutHpPlus(paramId);
+        result += this.armorDfPlus(paramId);
+        result += this.armorHpPlus(paramId);
+        result += this.ortHpPlus(paramId);
         this._equipmentIgnored = null;
         return result;
     };
@@ -739,6 +765,13 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
             this._equipmentIgnored = 3 - this._ignoreEquipIndex;
         }
         var result = VictorEngine.DualWield.xparam.call(this, xparamId);
+        if(xparamId==0 && this._xpHit) result += this._xpHit / 100;
+        if(xparamId==1 && this._xpEva) result += this._xpEva / 100;
+        if(xparamId==2 && this._xpCri) result += this._xpCri / 100;
+        if(xparamId==3 && this._xpCre) result += this._xpCre / 100;
+        if(xparamId==4 && this._xpMev) result += this._xpMev / 100;
+        if(xparamId==6 && this._xpCta) result += this._xpCta / 100;
+        if(xparamId==9 && this._xpTpr) result += this._xpTpr / 100;
         this._equipmentIgnored = null;
         return result;
     };
@@ -996,6 +1029,126 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
             return 0;
         }
     };
+    
+    Game_Actor.prototype.isDrawBuseki = function(item) {
+    	if (DataManager.isItem(item)) return false;
+    	if (DataManager.getBuseki(item) < 0) return false;
+    	return true;
+	};
+	
+	Game_Actor.prototype.isDrawDurability = function(item) {
+    	if (DataManager.isItem(item)) return false;
+    	if (DataManager.getDurability(item) < 0) return false;
+    	return true;
+	};
+	
+	Game_Actor.prototype.weapon0HpPlus = function(paramId) {
+        var equips = this.equips();
+        if (paramId === 0 && DataManager.isWeapon(equips[0])) {
+        	if(this.isDrawBuseki(equips[0])){
+        		var ya = DataManager.getBuseki(equips[0])/1000
+            	return Math.floor(ya);
+            }
+            return 0;
+        } else {
+            return 0;
+        }
+    };
+    
+    Game_Actor.prototype.weapon0AtPlus = function(paramId) {
+        var equips = this.equips();
+        if (paramId === 2 && DataManager.isWeapon(equips[0])) {
+        	if(this.isDrawDurability(equips[0])){
+        		var ya = DataManager.getDurability(equips[0])/40
+				var yaa = DataManager.getMaxDurability(equips[0])/40
+				return Math.floor(ya - yaa);
+            }
+            return 0;
+        } else {
+            return 0;
+        }
+    };
+    
+    Game_Actor.prototype.weapon1HpPlus = function(paramId) {
+        var equips = this.equips();
+        if (paramId === 0 && DataManager.isWeapon(equips[1])) {
+        	if(this.isDrawBuseki(equips[1])){
+        		var ya = DataManager.getBuseki(equips[1])/1000
+            	return Math.floor(ya);
+            }
+            return 0;
+        } else {
+            return 0;
+        }
+    };
+    
+    Game_Actor.prototype.weapon1AtPlus = function(paramId) {
+        var equips = this.equips();
+        if (paramId === 2 && DataManager.isWeapon(equips[1])) {
+        	if(this.isDrawDurability(equips[1])){
+        		var ya = DataManager.getDurability(equips[1])/40
+				var yaa = DataManager.getMaxDurability(equips[1])/40
+				return Math.floor(ya - yaa);
+            }
+            return 0;
+        } else {
+            return 0;
+        }
+    };
+    
+    Game_Actor.prototype.armorHpPlus = function(paramId) {
+        var equips = this.equips();
+        if (paramId === 0 && DataManager.isArmor(equips[3])) {
+        	if(this.isDrawBuseki(equips[3])){
+        		var ya = DataManager.getBuseki(equips[3])/1000
+            	return Math.floor(ya);
+            }
+            return 0;
+        } else {
+            return 0;
+        }
+    };
+    
+    Game_Actor.prototype.armorDfPlus = function(paramId) {
+        var equips = this.equips();
+        if (paramId === 3 && DataManager.isArmor(equips[3])) {
+        	if(this.isDrawDurability(equips[3])){
+        		var ya = DataManager.getDurability(equips[3])/40
+				var yaa = DataManager.getMaxDurability(equips[3])/40
+				return Math.floor(ya - yaa);
+            }
+            return 0;
+        } else {
+            return 0;
+        }
+    };
+    
+    Game_Actor.prototype.hutHpPlus = function(paramId) {
+        var equips = this.equips();
+        if (paramId === 0 && DataManager.isArmor(equips[2])) {
+        	if(this.isDrawBuseki(equips[2])){
+        		var ya = DataManager.getBuseki(equips[2])/2000
+            	return Math.floor(ya);
+            }
+            return 0;
+        } else {
+            return 0;
+        }
+    };
+    
+    Game_Actor.prototype.ortHpPlus = function(paramId) {
+        var equips = this.equips();
+        if (paramId === 0 && DataManager.isArmor(equips[4])) {
+        	if(this.isDrawBuseki(equips[4])){
+        		var ya = DataManager.getBuseki(equips[4])/2000
+            	return Math.floor(ya);
+            }
+            return 0;
+        } else {
+            return 0;
+        }
+    };
+    
 
     //=============================================================================
     // Window_EquipItem
@@ -1055,7 +1208,7 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
 
     VictorEngine.DualWield.drawParamName = Window_EquipStatus.prototype.drawParamName;
     Window_EquipStatus.prototype.drawParamName = function(x, y, i) {
-        if (VictorEngine.Parameters.DualWield.SeparatedAttack) {
+        if (VictorEngine.Parameters.DualWield.SeparatedAttack && !$gameParty.inBattle()) {
             var right = VictorEngine.Parameters.DualWield.RightHandPrefix + ' ';
             var left = VictorEngine.Parameters.DualWield.LeftHandPrefix + ' ';
             var name = i === 0 ? right : i === 1 ? left : ''
@@ -1068,6 +1221,9 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
 
     VictorEngine.DualWield.drawCurrentParam = Window_EquipStatus.prototype.drawCurrentParam;
     Window_EquipStatus.prototype.drawCurrentParam = function(x, y, i) {
+    if($gameParty.inBattle()){
+    VictorEngine.DualWield.drawCurrentParam.call(this, x, y, i);
+    }else{
         var paramId = VictorEngine.Parameters.DualWield.SeparatedAttack ? i === 0 ? 2 : i + 1 : i;
         var index = this._actor.isLeftHanded() && i < 2 ? i === 0 ? 1 : 0 : i;
         var equip = this._actor.equips()[index];
@@ -1079,10 +1235,14 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
         } else {
             VictorEngine.DualWield.drawCurrentParam.call(this, x, y, paramId);
         }
+        }
     };
 
     VictorEngine.DualWield.drawNewParam = Window_EquipStatus.prototype.drawNewParam;
     Window_EquipStatus.prototype.drawNewParam = function(x, y, i) {
+    if($gameParty.inBattle()){
+    VictorEngine.DualWield.drawNewParam.call(this, x, y, i);
+    }else{
         var paramId = VictorEngine.Parameters.DualWield.SeparatedAttack ? i === 0 ? 2 : i + 1 : i;
         var index = this._tempActor.isLeftHanded() && i < 2 ? i === 0 ? 1 : 0 : i;
         var equip = this._tempActor.equips()[index];
@@ -1093,6 +1253,7 @@ VictorEngine.DualWield = VictorEngine.DualWield || {};
             this.drawText('---', x, y, 48, 'right');
         } else {
             VictorEngine.DualWield.drawNewParam.call(this, x, y, paramId);
+        }
         }
     };
 

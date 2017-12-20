@@ -342,7 +342,7 @@ Game_Screen.prototype.erasePicture = function(pictureId) {
 
 //最大絵数
 Game_Screen.prototype.maxPictures = function() {
-    return 180;
+    return 280;
 };
 
     var _Game_Screen_showPicture = Game_Screen.prototype.showPicture;
@@ -351,6 +351,7 @@ Game_Screen.prototype.maxPictures = function() {
         _Game_Screen_showPicture.apply(this, arguments);
         var realPictureId = this.realPictureId(pictureId);
         if(realPictureId>=89 && realPictureId<99){
+        	$gameScreen.erasePicture(109);
         	$gameScreen.erasePicture(111);
 			$gameScreen.erasePicture(112);
 			$gameScreen.erasePicture(113);
@@ -380,11 +381,31 @@ Game_Screen.prototype.maxPictures = function() {
 			$gameScreen.erasePicture(136);
 			$gameScreen.erasePicture(137);
 			$gameScreen.erasePicture(138);
+			$gameScreen.erasePicture(139);
 			$gameScreen.erasePicture(100);
 			$gameScreen.erasePicture(140);
 			$gameScreen.erasePicture(141);
 			$gameScreen.erasePicture(142);
 			$gameScreen.erasePicture(143);
+			$gameScreen.erasePicture(144);
+			$gameScreen.erasePicture(145);
+			$gameScreen.erasePicture(146);
+			$gameScreen.erasePicture(147);
+			$gameScreen.erasePicture(148);
+			$gameScreen.erasePicture(149);
+			$gameScreen.erasePicture(150);
+			$gameScreen.erasePicture(151);
+			$gameScreen.erasePicture(152);
+			$gameScreen.erasePicture(153);
+			$gameScreen.erasePicture(154);
+			$gameScreen.erasePicture(155);
+			$gameScreen.erasePicture(156);
+			$gameScreen.erasePicture(157);
+			$gameScreen.erasePicture(158);
+			$gameScreen.erasePicture(159);
+			$gameScreen.erasePicture(160);
+			$gameScreen.erasePicture(161);
+			$gameSwitches.setValue(811, false);
         };
         if(!$gameSwitches.value(705))realPictureId += 20;
         if (this._paCellNumber > 1) {

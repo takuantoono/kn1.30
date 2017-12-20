@@ -1,11 +1,30 @@
 (function() {
 
+BattleManager.processTurn = function() {
+    var subject = this._subject;
+    var action = subject.currentAction();
+    if (action) {
+        action.prepare();
+        if (action.isValid()) {
+            this.startAction();
+        }
+        subject.removeCurrentAction();
+    } else {
+        subject.onAllActionsEnd();
+        this.refreshStatus();
+        this._logWindow.displayAutoAffectedStatus(subject);
+        this._logWindow.displayCurrentState(subject);
+        this._logWindow.displayRegeneration(subject);
+        this._subject = this.getNextSubject();
+    }
+};
+
 Window_BattleLog.prototype.displayAction = function(subject, item) {
     var numMethods = this._methods.length;
     if (DataManager.isSkill(item)) {
         if (item.message1) {
         var equips = subject.equips();
-        if(item.id == 1 && subject.isActor()){
+        if(item.meta.normalat && subject.isActor()){
         if((subject._dualWieldSpriteIndex-1)>0){
         var wepid = subject._dualWieldSpriteIndex - 1;
         }else{
@@ -25,6 +44,7 @@ Window_BattleLog.prototype.displayAction = function(subject, item) {
     if (this._methods.length === numMethods) {
         this.push('wait');
     }
+    $gameSwitches.setValue(892, false);
 };
 
 

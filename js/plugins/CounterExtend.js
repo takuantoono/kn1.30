@@ -546,6 +546,7 @@ var Imported = Imported || {};
     };
 
     BattleManager.prepareCounterSkill = function(subject, target) {
+    if(target.isEnemy())$gameSwitches.setValue(892, true);
         target.setCounterAction(subject);
         this._counterBattlers.push(target);
     };

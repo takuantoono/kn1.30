@@ -1820,6 +1820,7 @@ Scene_LearnSkill.prototype.start = function() {
 };
 
 Scene_LearnSkill.prototype.create = function() {
+$gameSwitches.setValue(535,true);
     Scene_ItemBase.prototype.create.call(this);
     this.createHelpWindow();
     this.createCommandWindow();
@@ -1998,6 +1999,7 @@ Scene_LearnSkill.prototype.onLearnCancel = function() {
       this._commandWindow.activate();
       this._helpWindow.setItem(null);
     } else {
+    $gameSwitches.setValue(535,false);
       this.popScene();
     }
 };

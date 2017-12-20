@@ -1196,17 +1196,49 @@ ItemManager.applyAugmentSetPrefix = function(mainItem, text, slot, add) {
 
 ItemManager.applyAugmentSetSuffix = function(mainItem, text, slot, add) {
     mainItem.augmentSuffixes = mainItem.augmentSuffixes || [];
-    if (add) {
-      //mainItem.augmentSuffixes[slot] = text;
-      var name = mainItem.augmentSuffixes + text;
-    } else {
-      //mainItem.augmentSuffixes[slot] = undefined;
-      console.log(text)
-      var name = mainItem.augmentSuffixes.replace(text,"");
+
+    var oid = mainItem.originalBaseItemId;
+    if(DataManager.isWeapon(mainItem)){
+    var sitem = $dataWeapons[oid];
+    }else{
+    var sitem = $dataArmors[oid];
     }
+    mainItem.baseItemName = sitem.name;
+    if(mainItem.matename)mainItem.baseItemName = mainItem.matename;
+    var name = "";
+    if(mainItem.ver > 0) name += "+" + mainItem.ver + " ";
+    name = this.applyPPAP(mainItem, 0, name, slot, add);
+    name = this.applyPPAP(mainItem, 1, name, slot, add);
+    name = this.applyPPAP(mainItem, 2, name, slot, add);
+    name = this.applyPPAP(mainItem, 3, name, slot, add);
+    name = this.applyPPAP(mainItem, 4, name, slot, add);
+    
     this.setNameSuffix(mainItem, name);
     mainItem.augmentSuffixes = name
     this.updateItemName(mainItem);
+};
+
+ItemManager.applyPPAP = function(mainItem, slot, name, sslot, add) {
+	if(slot == sslot && !add) return name;
+	var text = mainItem.augmentSlotItems[slot];
+	var item = false;
+	if(!text) return name;
+    if (text.match(/NONE/i)) {
+      return name;
+    } else if (text.match(/ITEM[ ](\d+)/i)) {
+      var id = parseInt(RegExp.$1);
+      var item = $dataItems[id];
+    } 
+	
+	if(item) {
+	var line = item.note;
+	if (line.match(/CHANGE SUFFIX:[ ](.*)/i)) {
+    name += String(RegExp.$1).trim();
+    } else if (line.match(/CANCEL SUFFIX:[ ](.*)/i)) {
+    name += String(RegExp.$1).trim();
+    }
+	}
+	return name;
 };
 
 ItemManager.applyAugmentSetPriorityName = function(mainItem, text, slot, add) {
@@ -1562,6 +1594,7 @@ Window_AugmentItemList.prototype.containsType = function(item) {
 };
 
 Window_AugmentItemList.prototype.isEnabled = function(item) {
+    if (this._item && this._item.chuu) return false;
     if (item === null) return true;
     return true;
 };

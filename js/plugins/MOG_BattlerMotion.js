@@ -651,7 +651,9 @@ Sprite_Battler.prototype.update_action_swing_left = function() {
 // * Update Action Jump
 //==============================
 Sprite_Battler.prototype.update_action_jump = function() {
-if ($gameScreen.picture(110)) {return};
+if ($gameScreen.picture(130) || $gameSwitches.value(858) || $gameSwitches.value(892)) {
+return
+};
       this._battler._motion_action_data[1] += 1
 	  if (this._battler._motion_action_data[1] < 15) {
 

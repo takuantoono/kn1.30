@@ -161,7 +161,7 @@ BattleManager.checkChainAction = function() {
 		 if (note_data[0].toLowerCase() == "chain action"){			 
 			 var par = note_data[1].split(':');
 			 var action = $dataSkills[Number(par[0])];
-	     	 var times = Math.min(Math.max(Number(par[1]),1),999);
+	     	 var times = Math.min(Math.max(Number(par[1]),0),999);
 			 var duration = Math.min(Math.max(Number(par[2]),10),999);			 
 			 if (action) {
 			    $gameTemp._bchainData[1] = action;
@@ -208,6 +208,7 @@ BattleManager.setBchainPosition = function(subject, target) {
 var _mog_bchain_bmngr_endAction = BattleManager.endAction;
 BattleManager.endAction = function() {
 	if (BattleManager.canUseChainAction()) {
+					console.log($gameTemp._bchainData[6])
 		$gameTemp._bchainData[0] = true;
 		$gameTemp._bchainTemp = true;
 		if ($gameTemp._bchainData[9]) {this.executeChainAction()};
@@ -215,7 +216,9 @@ BattleManager.endAction = function() {
 	  };
 	 _mog_bchain_bmngr_endAction.call(this);
 	 if(!$gameTemp._bchainTemp){
-	 for (var i = 10; i < 150; i++) {
+	 
+	 var target = this._targets.length > 0 ? this._targets[0] : null;
+	 for (var i = 10; i < 280; i++) {
             	$gameScreen.erasePicture(i);
         		}
         		}
@@ -543,9 +546,10 @@ BattleChainSprite.prototype.check_key = function(value) {
 BattleChainSprite.prototype.setWrong = function(value) {
 	SoundManager.playBuzzer();
 	this.clearCommands();
-	for (var i = 10; i < 150; i++) {
+	for (var i = 10; i < 280; i++) {
             	$gameScreen.erasePicture(i);
         		}
+        		$gameSwitches.setValue(858, false);
 };
 
 //==============================

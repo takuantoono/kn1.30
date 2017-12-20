@@ -371,7 +371,7 @@
     Game_Troop.prototype.setupPictureCommonEvent = function() {
         var commonId = $gameTemp.pictureCommonId();
         var event    = $dataCommonEvents[commonId];
-        if (commonId > 0 && !this.isEventRunning() && event) {
+        if (commonId > 0 && !this.isEventRunning() && event && !$gameMessage.isBusy()) {
             if (paramGameVariablePictNum)
                 $gameVariables._data[paramGameVariablePictNum] = $gameTemp.pictureNum();
             this._interpreter.setup(event.list);

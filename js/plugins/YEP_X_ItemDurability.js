@@ -8,11 +8,11 @@ Imported.YEP_X_ItemDurability = true;
 
 var Yanfly = Yanfly || {};
 Yanfly.IDur = Yanfly.IDur || {};
-Yanfly.IDur.version = 1.02;
+Yanfly.IDur.version = 1.03;
 
 //=============================================================================
  /*:
- * @plugindesc v1.02 (Requires YEP_ItemCore.js) Independent equipment
+ * @plugindesc v1.03 (Requires YEP_ItemCore.js) Independent equipment
  * now have durability, which when runs out, will break.
  * @author Yanfly Engine Plugins
  *
@@ -20,15 +20,22 @@ Yanfly.IDur.version = 1.02;
  * @default
  *
  * @param Default Durability
+ * @parent ---Defaults---
  * @desc This is the default durability value for independent
  * equipment when made. Set to -1 to bypass durability.
  * @default 100
  *
  * @param Durability Variance
+ * @parent ---Defaults---
+ * @type number
+ * @min 0
  * @desc The random variance value for durability.
  * @default 5
  *
  * @param Durability Maximum
+ * @parent ---Defaults---
+ * @type number
+ * @min 1
  * @desc Default maximum value for durability.
  * @default 200
  *
@@ -36,36 +43,46 @@ Yanfly.IDur.version = 1.02;
  * @default
  *
  * @param Physical Action
- * @desc When performing physical actions, drop all equipped weapons
- * durability by this much.
+ * @parent ---Durability Drop---
+ * @desc When performing physical actions, drop all equipped
+ * weapons durability by this much.
  * @default -1
  *
  * @param Magical Action
- * @desc When performing magical actions, drop all equipped weapons
- * durability by this much.
+ * @parent ---Durability Drop---
+ * @desc When performing magical actions, drop all equipped
+ * weapons durability by this much.
  * @default 0
  *
  * @param Certain Action
- * @desc When performing certain hit actions, drop all equipped weapons
- * durability by this much.
+ * @parent ---Durability Drop---
+ * @desc When performing certain hit actions, drop all equipped
+ * weapons durability by this much.
  * @default 0
  *
  * @param Damage All Armor
+ * @parent ---Durability Drop---
+ * @type boolean
+ * @on Damage All
+ * @off Damage Random
  * @desc When receiving damage, damage all armors or 1 random?
  * RANDOM - false     ALL - true
  * @default false
  *
  * @param Physical Damage
+ * @parent ---Durability Drop---
  * @desc When performing physical actions, drop all equipped weapons
  * durability by this much.
  * @default -2
  *
  * @param Magical Damage
+ * @parent ---Durability Drop---
  * @desc When performing magical actions, drop all equipped weapons
  * durability by this much.
  * @default -1
  *
  * @param Certain Damage
+ * @parent ---Durability Drop---
  * @desc When performing certain hit actions, drop all equipped weapons
  * durability by this much.
  * @default -1
@@ -74,29 +91,38 @@ Yanfly.IDur.version = 1.02;
  * @default
  *
  * @param Broken Text
+ * @parent ---Breaking---
  * @desc The text shown when an item breaks mid-battle.
  * %1 - User's name     %2 - Item Name     %3 - Item Icon
  * @default %1's %3%2 broke!
  *
  * @param Broken Wait
+ * @parent ---Breaking---
  * @desc If using the Battle Engine Core, this is how many frames
  * the message will wait.
  * @default 60
  *
  * @param Break Sound
+ * @parent ---Breaking---
+ * @type file
+ * @dir audio/se/
+ * @require 1
  * @desc This is the default break sound filename.
  * This is case-sensitive. Do not include file extension.
  * @default Crash
  *
  * @param Break Volume
+ * @parent ---Breaking---
  * @desc This is the default break sound volume.
  * @default 100
  *
  * @param Break Pitch
+ * @parent ---Breaking---
  * @desc This is the default break sound pitch.
  * @default 150
  *
  * @param Break Pan
+ * @parent ---Breaking---
  * @desc This is the default break sound pan.
  * @default 0
  *
@@ -104,34 +130,50 @@ Yanfly.IDur.version = 1.02;
  * @default
  *
  * @param Show Repair
+ * @parent ---Repair---
+ * @type boolean
+ * @on Show
+ * @off Hide
  * @desc Show the repair equipment option when selecting equips?
  * NO - false     YES - true
  * @default true
  *
  * @param Enable Repair
+ * @parent ---Repair---
+ * @type boolean
+ * @on Enable
+ * @off Disable
  * @desc Enable the repair equipment option when selecting equips?
  * NO - false     YES - true
  * @default true
  *
  * @param Repair Command
+ * @parent ---Repair---
  * @desc Command text for repairing eslected equipment.
  * %1 - Equipment Name
  * @default Repair %1
  *
  * @param Repair Sound
+ * @parent ---Repair---
+ * @type file
+ * @dir audio/se/
+ * @require 1
  * @desc This is the default repair sound filename.
  * This is case-sensitive. Do not include file extension.
  * @default Skill2
  *
  * @param Repair Volume
+ * @parent ---Repair---
  * @desc This is the default repair sound volume.
  * @default 100
  *
  * @param Repair Pitch
+ * @parent ---Repair---
  * @desc This is the default repair sound pitch.
  * @default 150
  *
  * @param Repair Pan
+ * @parent ---Repair---
  * @desc This is the default repair sound pan.
  * @default 0
  *
@@ -139,25 +181,38 @@ Yanfly.IDur.version = 1.02;
  * @default
  *
  * @param Show Durability
+ * @parent ---Window Info---
  * @desc Show durability values for equipment?
  * NO - false     YES - true
  * @default true
  *
  * @param Durability Text
+ * @parent ---Window Info---
  * @desc Text used to display durability:
  * @default Durability
  *
+ * @param Buseki Text
+ * @parent ---Window Info---
+ * @desc Text used to display durability:
+ * @default Buseki
+ *
  * @param Durability Format
+ * @parent ---Window Info---
  * @desc The format in displaying the durability value.
  * %1 - Current Durability     %2 - Maximum Durability
  * @default %1
  *
  * @param Show Unbreakable
+ * @parent ---Window Info---
+ * @type boolean
+ * @on Show
+ * @off Hide
  * @desc Show the durability value if item is unbreakable?
  * NO - false     YES - true
  * @default true
  *
  * @param Unbreakable Text
+ * @parent ---Window Info---
  * @desc The text used to indicate an item is unbreakable.
  * @default Unbreakable
  *
@@ -165,54 +220,106 @@ Yanfly.IDur.version = 1.02;
  * @default
  *
  * @param Unbreakable
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color used for unbreakable items.
  * @default 23
  *
  * @param Max Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is equal to its max.
  * @default 29
  *
  * @param 190% Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is above 190% default.
  * @default 29
  *
  * @param 175% Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is above 175% default.
  * @default 24
  *
  * @param 150% Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is above 150% default.
  * @default 24
  *
  * @param 120% Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is above 120% default.
  * @default 4
  *
  * @param 110% Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is above 110% default.
  * @default 0
  *
  * @param 100% Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is above 100% default.
  * @default 0
  *
  * @param 80% Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is above 80% default.
  * @default 0
  *
  * @param 50% Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is above 80% default.
  * @default 6
  *
  * @param 25% Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is above 25% default.
  * @default 17
  *
  * @param 10% Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is above 10% default.
  * @default 2
  *
  * @param 1% Durability
+ * @parent ---Durability Color---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Text color when durability is above 1% default.
  * @default 18
  *
@@ -485,6 +592,9 @@ Yanfly.IDur.version = 1.02;
  * Changelog
  * ============================================================================
  *
+ * Version 1.03:
+ * - Updated for RPG Maker MV version 1.5.0.
+ *
  * Version 1.02:
  * - Lunatic Mode fail safes added.
  *
@@ -537,6 +647,7 @@ Yanfly.Param.IDurRepairPan = Number(Yanfly.Parameters['Repair Pan']);
 
 Yanfly.Param.IDurShowDur = eval(String(Yanfly.Parameters['Show Durability']));
 Yanfly.Param.IDurText = String(Yanfly.Parameters['Durability Text']);
+Yanfly.Param.IDurBuseki = String(Yanfly.Parameters['Buseki Text']);
 Yanfly.Param.IDurFmt = String(Yanfly.Parameters['Durability Format']);
 Yanfly.Param.IDurShowUnbr = eval(String(Yanfly.Parameters['Show Unbreakable']));
 Yanfly.Param.IDurUnbreakable = String(Yanfly.Parameters['Unbreakable Text']);
@@ -598,6 +709,8 @@ DataManager.processIDurNotetags1 = function(group) {
       var line = notedata[i];
       if (line.match(/<DURABILITY:[ ](\d+)>/i)) {
         obj.durability = Math.max(1, parseInt(RegExp.$1));
+      } else if (line.match(/<Buseki:[ ](\d+)>/i)) {
+        obj.buseki = parseInt(RegExp.$1);
       } else if (line.match(/<DURABILITY VARIANCE:[ ](\d+)>/i)) {
         obj.durVariance = parseInt(RegExp.$1);
       } else if (line.match(/<DURABILITY MAXIMUM:[ ](\d+)>/i)) {
@@ -638,6 +751,14 @@ DataManager.processIDurNotetags2 = function(group) {
     };
     obj.repairWeaponUnbreakable = [false];
     obj.repairArmorUnbreakable = [false];
+    obj.repairEtc = [false];
+    obj.repairBronze = [false];
+    obj.repairIron = [false];
+    obj.repairSilver = [false];
+    obj.repairJade = [false];
+    obj.repairObsidian = [false];
+    obj.repairMisril = [false];
+    obj.repairToku = [false];
     var evalMode = 'none';
     obj.repairDurabilityEval = ''
 
@@ -680,6 +801,24 @@ DataManager.processIDurNotetags2 = function(group) {
         evalMode = 'none';
       } else if (evalMode === 'custom repair eval') {
         obj.repairDurabilityEval = obj.repairDurabilityEval + line + '\n';
+      }
+      
+      if (line.match(/<REPAIR BRONZE>/i)) {
+        obj.repairBronze[0] = true;
+      } else if (line.match(/<REPAIR IRON>/i)) {
+        obj.repairIron[0] = true;
+      } else if (line.match(/<REPAIR SILVER>/i)) {
+        obj.repairSilver[0] = true;
+      } else if (line.match(/<REPAIR ETC>/i)) {
+        obj.repairEtc[0] = true;
+      } else if (line.match(/<REPAIR JADE>/i)) {
+        obj.repairJade[0] = true;
+      } else if (line.match(/<REPAIR OBSIDIAN>/i)) {
+        obj.repairObsidian[0] = true;
+      } else if (line.match(/<REPAIR MISRIL>/i)) {
+        obj.repairMisril[0] = true;
+      } else if (line.match(/<REPAIR TOKU>/i)) {
+        obj.repairToku[0] = true;
       }
     }
   }
@@ -799,6 +938,13 @@ DataManager.getDurability = function(item) {
     return item.durability;
 };
 
+DataManager.getBuseki = function(item) {
+    if (this.isItem(item)) return -1;
+    if (!this.isIndependent(item)) return -1;
+    if (item.buseki === undefined) ItemManager.makeBuseki(item);
+    return item.buseki;
+};
+
 DataManager.getMaxDurability = function(item) {
     if (this.isItem(item)) return -1;
     if (!this.isIndependent(item)) return -1;
@@ -828,13 +974,39 @@ ItemManager.makeDurability = function(item, variance) {
     this.clampDurability(item);
 };
 
+ItemManager.makeBuseki = function(item, variance) {
+    if (DataManager.isItem(item)) return;
+    variance = variance || 0;
+    var baseItem = DataManager.getBaseItem(item);
+    item.buseki = 0;
+    if (item.buseki <= 0) return;
+    if (variance >= 0) this.makeBusekiVariance(item, variance);
+    this.clampBuseki(item);
+};
+
 ItemManager.makeDurabilityVariance = function(item, variance) {
     var randomValue = variance * 2 + 1;
     var offset = variance;
     item.durability += Math.floor(Math.random() * randomValue - offset);
 };
 
+ItemManager.makeBusekiVariance = function(item, variance) {
+    var randomValue = variance * 2 + 1;
+    var offset = variance;
+    item.buseki += Math.floor(Math.random() * randomValue - offset);
+};
+
 ItemManager.clampDurability = function(item) {
+    var baseItem = DataManager.getBaseItem(item);
+    item.durability = item.durability.clamp(0, baseItem.durMax+50);
+};
+
+ItemManager.clampBuseki = function(item) {
+    var baseItem = DataManager.getBaseItem(item);
+    item.buseki = item.buseki.clamp(0, 99999);
+};
+
+ItemManager.clampDurability2 = function(item) {
     var baseItem = DataManager.getBaseItem(item);
     item.durability = item.durability.clamp(0, baseItem.durMax);
 };
@@ -870,7 +1042,7 @@ ItemManager.addRepairDurability = function(item, effectItem) {
       item.durability += array1[0] || 0;
       if (array1[type] && array1[type] > 0) item.durability += array1[type];
     }
-    this.clampDurability(item);
+    this.clampDurability2(item);
 };
 
 //=============================================================================
@@ -922,7 +1094,11 @@ Game_System.prototype.setEnableRepairDurability = function(value) {
 
 Game_Actor.prototype.durabilityBreakItem = function(obj) {
     if (!obj) return;
-    this.discardEquip(obj);
+    //this.discardEquip(obj);
+    if(obj._broken) return;
+    obj._broken = true;
+    obj.durability = 0;
+    this.changeEquipById(obj.etypeId, 0);
     this.playDurabilityBreakSound(obj);
     this.customDurabilityBreakEval(obj);
     var scene = SceneManager._scene;
@@ -981,6 +1157,7 @@ Game_Actor.prototype.damageAllArmorDurability = function(value) {
 };
 
 Game_Actor.prototype.damageAllDurability = function(value, group) {
+	if($gameActors.actor(1).isStateAffected(187)) return;
     if (value === 0) return;
     var length = group.length;
     var removed = [];
@@ -989,6 +1166,9 @@ Game_Actor.prototype.damageAllDurability = function(value, group) {
       if (!obj) continue;
       if (!obj.baseItemId) continue;
       if (obj.durability < 0) continue;
+      if(obj.buseki >= 0)obj.buseki += 1;
+      if($gameVariables.value(255)!=1 && Math.floor(Math.random() * 5) == 1) continue;
+      if($gameVariables.value(255)==1 && Math.floor(Math.random() * 2) == 1) continue;
       obj.durability += value;
       if (obj.durability <= 0) removed.push(obj);
     }
@@ -1008,6 +1188,7 @@ Game_Actor.prototype.damageRandomArmorDurability = function(value) {
 };
 
 Game_Actor.prototype.damageRandomDurability = function(value, group) {
+	if($gameActors.actor(1).isStateAffected(187)) return;
     if (value === 0) return;
     var length = group.length;
     var valid = [];
@@ -1020,6 +1201,9 @@ Game_Actor.prototype.damageRandomDurability = function(value, group) {
     }
     var item = valid[Math.floor(Math.random() * valid.length)];
     if (!item) return;
+    if(item.buseki >= 0)item.buseki += 1;
+    if($gameVariables.value(255)!=1 && Math.floor(Math.random() * 5) == 1) return;
+    if($gameVariables.value(255)==1 && Math.floor(Math.random() * 2) == 1) return;
     item.durability += value;
     if (item.durability <= 0) this.durabilityBreakItem(item);
 };
@@ -1120,6 +1304,7 @@ Yanfly.IDur.Window_ItemInfo_drawItemInfoC =
 Window_ItemInfo.prototype.drawItemInfoC = function(dy) {
     dy = Yanfly.IDur.Window_ItemInfo_drawItemInfoC.call(this, dy);
     if (this.isDrawDurability()) dy = this.drawItemDurability(dy);
+    if (this.isDrawBuseki()) dy = this.drawItemBuseki(dy);
     return dy;
 };
 
@@ -1127,6 +1312,16 @@ Window_ItemInfo.prototype.isDrawDurability = function() {
     if (DataManager.isItem(this._item)) return false;
     if (!Yanfly.Param.IDurShowUnbr) {
       if (DataManager.getDurability(this._item) < 0) return false;
+    }
+    return Yanfly.Param.IDurShowDur;
+};
+
+Window_ItemInfo.prototype.isDrawBuseki = function() {
+    if (DataManager.isItem(this._item)) return false;
+    var cur = DataManager.getDurability(this._item);
+    if (cur < 0) return false;
+    if (!Yanfly.Param.IDurShowUnbr) {
+      if (DataManager.getBuseki(this._item) < 0) return false;
     }
     return Yanfly.Param.IDurShowDur;
 };
@@ -1154,32 +1349,49 @@ Window_ItemInfo.prototype.drawItemDurability = function(dy) {
     return dy;
 };
 
+Window_ItemInfo.prototype.drawItemBuseki = function(dy) {
+    this.resetFontSettings();
+    this.changeTextColor(this.systemColor());
+    var text = Yanfly.Param.IDurBuseki;
+    var dx = this.textPadding();
+    var dw = this.contents.width - this.textPadding() * 2;
+    this.drawText(text, dx, dy, dw);
+    var fmt = Yanfly.Param.IDurFmt;
+    var cur = DataManager.getBuseki(this._item);
+    var max = 99999;
+    if (cur >= 0) {
+      this.changeTextColor(this.textColor(this.durabilityColor2(cur, max)));
+      text = fmt.format(cur, max)
+    } else {
+      text = "----";
+    }
+    this.drawText(text, dx, dy, dw, 'right');
+    this.resetFontSettings();
+    dy += this.lineHeight();
+    return dy;
+};
+
 Window_ItemInfo.prototype.durabilityColor = function(cur, max) {
-    var value = DataManager.getBaseItem(this._item).durability;
-    if (cur === max) {
+    var value = max;
+    if (cur >= max) {
       return Yanfly.Param.IDurColor['max'];
-    } else if (cur >= 1.90 * value) {
-      return Yanfly.Param.IDurColor['rate190'];
-    } else if (cur >= 1.75 * value) {
-      return Yanfly.Param.IDurColor['rate175'];
-    } else if (cur >= 1.50 * value) {
-      return Yanfly.Param.IDurColor['rate150'];
-    } else if (cur >= 1.20 * value) {
-      return Yanfly.Param.IDurColor['rate120'];
-    } else if (cur >= 1.10 * value) {
-      return Yanfly.Param.IDurColor['rate110'];
-    } else if (cur >= 1.00 * value) {
+    } else if (cur >= 0.75 * value) {
       return Yanfly.Param.IDurColor['rate100'];
-    } else if (cur >= 0.80 * value) {
-      return Yanfly.Param.IDurColor['rate80'];
     } else if (cur >= 0.50 * value) {
       return Yanfly.Param.IDurColor['rate50'];
     } else if (cur >= 0.25 * value) {
       return Yanfly.Param.IDurColor['rate25'];
-    } else if (cur >= 0.10 * value) {
-      return Yanfly.Param.IDurColor['rate10'];
-    } else {
+    }  else {
       return Yanfly.Param.IDurColor['rate1'];
+    }
+};
+
+Window_ItemInfo.prototype.durabilityColor2 = function(cur, max) {
+    var value = DataManager.getBaseItem(this._item).durability;
+    if (cur >= max) {
+      return Yanfly.Param.IDurColor['max'];
+    } else {
+      return Yanfly.Param.IDurColor['rate100'];
     }
 };
 
@@ -1258,6 +1470,38 @@ Window_RepairItemList.prototype.containsType = function(item) {
       var array2 = item.repairArmorUnbreakable;
     } else {
       return false;
+    }
+    if (this._item && this._item.meta.bronze){
+    if(!item.repairBronze) return false;
+    if(item.repairBronze && !item.repairBronze[0]) return false;
+    }
+    if (this._item && this._item.meta.iron){
+    if(!item.repairIron) return false;
+    if(item.repairIron && !item.repairIron[0]) return false;
+    }
+    if (this._item && this._item.meta.silver){
+    if(!item.repairSilver) return false;
+    if(item.repairSilver && !item.repairSilver[0]) return false;
+    }
+    if (this._item && this._item.meta.jade){
+    if(!item.repairJade) return false;
+    if(item.repairJade && !item.repairJade[0]) return false;
+    }
+    if (this._item && this._item.meta.obsidian){
+    if(!item.repairObsidian) return false;
+    if(item.repairObsidian && !item.repairObsidian[0]) return false;
+    }
+    if (this._item && this._item.meta.misril){
+    if(!item.repairMisril) return false;
+    if(item.repairMisril && !item.repairMisril[0]) return false;
+    }
+    if (this._item && this._item.meta.repSP){
+    if(!item.repairToku) return false;
+    if(item.repairToku && !item.repairToku[0]) return false;
+    }
+    if (this._item && !this._item.meta.silver && !this._item.meta.iron && !this._item.meta.bronze && !this._item.meta.jade && !this._item.meta.obsidian && !this._item.meta.misril && !this._item.meta.repSP){
+    if(!item.repairEtc) return false;
+    if(item.repairEtc && !item.repairEtc[0]) return false;
     }
     if (array1) {
       if (array1[0] && array1[0] > 0) return true;

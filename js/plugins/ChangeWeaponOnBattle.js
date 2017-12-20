@@ -61,10 +61,23 @@
     this.contents.clear();
     if (this._actor) {
       for (var i = 0; i < 2; i++) {
-        this.drawItem(0, this.lineHeight() * i, 1 + i);
+        this.drawItem(0, this.lineHeight() * i, 2 + i);
       }
     }
   };
+  
+  Window_EquipStatus.prototype.drawItem = function(x, y, paramId) {
+    this.drawParamName(x + this.textPadding(), y, paramId);
+    if (this._actor) {
+        this.drawCurrentParam(x + 140, y, paramId);
+    }
+    this.drawRightArrow(x + 188, y);
+    if (this._tempActor) {
+        this.drawNewParam(x + 222, y, paramId);
+    }
+};
+  
+
 
   //---------------------------------------------------------------------------
   // Tiny equip slot
@@ -244,11 +257,57 @@
     this.refreshActor();
     this._statusWindow.refresh();
     this._equipStatusWindow.refresh();
+    this._equipStatusWindow.hide();
+    this._equipItemWindow.hide();
+    this._equipSlotWindow.hide();
+    this._equipItemWindow.deselect();
+    this._equipSlotWindow.deactivate();
+    $bokeke=1
+    
+    if(BattleManager.actor().canPaySkillCost($dataSkills[BattleManager.actor().attackSkillId()])){
+    this.commandAttack();
+
+    
+    this._enemyWindow.setHandler('ok',
+     this.onEnemyOk2.bind(this));
+    this._enemyWindow.setHandler('cancel',
+     this.onEquipSlotOk2.bind(this));
+    }else{
+    
+    };
   };
+  
+  Scene_Battle.prototype.onEquipSlotOk2 = function() {
+  this._enemyWindow.setHandler('ok',
+     this.onEnemyOk.bind(this));
+  	this._enemyWindow.setHandler('cancel',
+     this.onEnemyCancel.bind(this));
+     this._enemyWindow.deselect();
+     this._enemyWindow.hide();
+    this.commandEquip();
+  };
+  
+
 
   Scene_Battle.prototype.onEquipItemCancel = function() {
     this._equipSlotWindow.activate();
     this._equipItemWindow.deselect();
   };
+  
+  Scene_Battle.prototype.onEnemyOk2 = function() {
+  this._enemyWindow.setHandler('ok',
+     this.onEnemyOk.bind(this));
+  	this._enemyWindow.setHandler('cancel',
+     this.onEnemyCancel.bind(this));
+    var action = BattleManager.inputtingAction();
+    action.setTarget(this._enemyWindow.enemyIndex());
+    this._enemyWindow.hide();
+    this._skillWindow.hide();
+    this._itemWindow.hide();
+    this._equipSlotWindow.deactivate();
+    this.selectNextCommand();
+    $bokeke=1
+};
+  
 
 })();

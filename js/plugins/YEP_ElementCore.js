@@ -749,18 +749,21 @@ Game_Action.prototype.calcElementRate = function(target) {
     if(elementId==1 && this.subject().isStateAffected(121))eleRate += 0.5;
     if(elementId==2 && this.subject().isStateAffected(121))eleRate += 0.5;
     if(elementId==8 && this.subject().isStateAffected(121))eleRate += 0.5;
-    
+    if(this.subject().isActor()){
+    if(this.subject().equips()[0] && this.subject().equips()[0].note.match(/<(?:bow)>/i) || this.subject().equips()[1] && this.subject().equips()[1].note.match(/<(?:bow)>/i)){
     if(this.subject().isStateAffected(12) && target.elementRate(12)>=1){
      if(this._item._itemId==1 || this._item._itemId==4 || this._item._itemId==23){
-     eleRate += 1.30;
-     return eleRate;
+     eleRate += 1.40;
+     continue;
+     }
+     }
      }
     }
     if(elementId==12){
      if(eleRate>1)eleRate -= 1;
      finalRate = finalRate || 0;
       finalRate += eleRate;
-      return finalRate;
+      continue;
     }else{
       finalRate = finalRate || 1.00;
       eleRate -= 1.00;
@@ -787,7 +790,7 @@ Game_Action.prototype.calcElementRate = function(target) {
     }
     }
     if(eleRate==0){
-      return 0;
+      continue;
      }
     if(ignore){
     if(eleRate>1){

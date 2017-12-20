@@ -1075,7 +1075,10 @@ Scene_Shop.prototype.onNumberOk = function() {
 	if($gameVariables.value(148)==0) {
 	return 0;
 	} else {
-    return Math.floor(this._item.price / $gameVariables.value(148));
+	var cur = DataManager.getDurability(this._item);
+	var max = DataManager.getMaxDurability(this._item);
+	var sell = this._item.price * (cur + 100) / (max + 100);
+    return Math.floor(sell / $gameVariables.value(148));
     }
 	};
 	

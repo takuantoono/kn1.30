@@ -1,5 +1,206 @@
 ﻿(function() {
 
+Game_Party.prototype.onPlayerWalk = function() {
+    $gameParty.members()[$gameVariables.value(882)].onPlayerWalk();
+};
+
+Game_Actor.prototype.turnEndOnMap = function() {
+        this.onTurnEnd();
+        if (this.result().hpDamage > 0) {
+            this.performMapDamage();
+        }
+};
+
+BattleManager.updateTurnEnd = function() {
+    this.startInput();
+    $gameScreen.erasePicture(10);
+};
+
+
+
+Game_Actor.prototype.nifeLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.nife) actor.nife = 1;
+    $gameVariables.setValue(num, actor.nife);
+};
+
+Game_Actor.prototype.nifeAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.nife) actor.nife = 1;
+    actor.nife += 1;
+};
+
+Game_Actor.prototype.swordLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.sword) actor.sword = 1;
+    $gameVariables.setValue(num, actor.sword);
+};
+
+Game_Actor.prototype.swordAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.sword) actor.sword = 1;
+    actor.sword += 1;
+};
+
+Game_Actor.prototype.twoSWLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.twoSW) actor.twoSW = 1;
+    $gameVariables.setValue(num, actor.twoSW);
+};
+
+Game_Actor.prototype.twoSWAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.twoSW) actor.twoSW = 1;
+    actor.twoSW += 1;
+};
+
+Game_Actor.prototype.axeLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.axe) actor.axe = 1;
+    $gameVariables.setValue(num, actor.axe);
+};
+
+Game_Actor.prototype.axeAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.axe) actor.axe = 1;
+    actor.axe += 1;
+};
+
+Game_Actor.prototype.twoAxeLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.twoAxe) actor.twoAxe = 1;
+    $gameVariables.setValue(num, actor.twoAxe);
+};
+
+Game_Actor.prototype.twoAxeAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.twoAxe) actor.twoAxe = 1;
+    actor.twoAxe += 1;
+};
+
+Game_Actor.prototype.twoAxeLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.twoAxe) actor.twoAxe = 1;
+    $gameVariables.setValue(num, actor.twoAxe);
+};
+
+Game_Actor.prototype.twoAxeAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.twoAxe) actor.twoAxe = 1;
+    actor.twoAxe += 1;
+};
+
+Game_Actor.prototype.staffLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.staff) actor.staff = 1;
+    $gameVariables.setValue(num, actor.staff);
+};
+
+Game_Actor.prototype.staffAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.staff) actor.staff = 1;
+    actor.staff += 1;
+};
+
+Game_Actor.prototype.bowLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.bow) actor.bow = 1;
+    $gameVariables.setValue(num, actor.bow);
+};
+
+Game_Actor.prototype.bowAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.bow) actor.bow = 1;
+    actor.bow += 1;
+};
+
+Game_Actor.prototype.handLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.hand) actor.hand = 1;
+    $gameVariables.setValue(num, actor.hand);
+};
+
+Game_Actor.prototype.handAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.hand) actor.hand = 1;
+    actor.hand += 1;
+};
+
+Game_Actor.prototype.maceLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.mace) actor.mace = 1;
+    $gameVariables.setValue(num, actor.mace);
+};
+
+Game_Actor.prototype.maceAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.mace) actor.mace = 1;
+    actor.mace += 1;
+};
+
+Game_Actor.prototype.twoMaceLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.twoMace) actor.twoMace = 1;
+    $gameVariables.setValue(num, actor.twoMace);
+};
+
+Game_Actor.prototype.twoMaceAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.twoMace) actor.twoMace = 1;
+    actor.twoMace += 1;
+};
+
+Game_Actor.prototype.spearLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.spear) actor.spear = 1;
+    $gameVariables.setValue(num, actor.spear);
+};
+
+Game_Actor.prototype.spearAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.spear) actor.spear = 1;
+    actor.spear += 1;
+};
+
+Game_Actor.prototype.twoSPLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.twoSP) actor.twoSP = 1;
+    $gameVariables.setValue(num, actor.twoSP);
+};
+
+Game_Actor.prototype.twoSPAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.twoSP) actor.twoSP = 1;
+    actor.twoSP += 1;
+};
+
+Game_Actor.prototype.gunLevel = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.gun) actor.gun = 1;
+    $gameVariables.setValue(num, actor.gun);
+};
+
+Game_Actor.prototype.gunAdd = function(num) {
+    var actor = $gameActors.actor($gameVariables.value(60));
+    if(!actor.gun) actor.gun = 1;
+    actor.gun += 1;
+};
+
+
+
+Window_BattleLog.prototype.displayCritical = function(target) {
+    if (target.result().critical) {
+        if (target.isActor()) {
+        AudioManager.playSe({"name":"Monster2","volume":90,"pitch":150,"pan":0})
+        $gameScreen.startFlash([255,0,0,255], 30)
+            this.push('addText', TextManager.criticalToActor);
+        } else {
+            this.push('addText', TextManager.criticalToEnemy);
+        }
+        
+    }
+};
+
 Game_Battler.prototype.initTp = function() {
     //this.setTp(Math.randomInt(25));
 };
@@ -44,6 +245,8 @@ var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
 	var com = $gameVariables.value($gameVariables.value(60) + 43)
 	var ed = $gameActors.actor($gameVariables.value(60)).isStateAffected(83)
 	var pp = 0; var ppp = 0;
+	var su = 1;
+	if($gameParty.members()[$gameVariables.value(54)].isStateAffected(253)) su = 3;
 	if($gameParty.members()[$gameVariables.value(54)].isStateAffected(118)) pp += 15;
 	if($gameSwitches.value(399) && !$gameParty.members()[$gameVariables.value(54)].isStateAffected(253)) ppp += 40;
 	if($gameParty.members()[$gameVariables.value(54)]._equips[0]._itemId == 20 || $gameParty.members()[$gameVariables.value(54)]._equips[1]._itemId == 20) {
@@ -52,9 +255,9 @@ var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
 	};
 	if(com != 0 && !ed){
 	var id = $gameVariables.value($gameVariables.value(60) + 68)
-	if(id == 0 && $gameVariables.value(92) < (3 + p + pp + ppp) && !$gameActors.actor($gameVariables.value(60)).isStateAffected(1)  && $gameVariables.value(91) > 0) $gameSwitches.setValue(177, true)
-	if(id == 1 && $gameVariables.value(92) < (15 + p + pp + (ppp * 2)) && $gameVariables.value(6) < 50 && $gameVariables.value(91) > 0) $gameSwitches.setValue(177, true)
-	if(id == 2 && $gameVariables.value(92) < (25 + p + pp + (ppp * 2)) && $gameVariables.value(91) < 1) $gameSwitches.setValue(177, true)
+	if(id == 0 && $gameVariables.value(92) < (4 + p + pp + ppp) / su && $gameVariables.value(91) > 0) $gameSwitches.setValue(177, true)
+	if(id == 1 && $gameVariables.value(92) < (15 + p + pp + (ppp * 2)) / su && $gameVariables.value(6) < 50 && $gameVariables.value(91) > 0) $gameSwitches.setValue(177, true)
+	if(id == 2 && $gameVariables.value(92) < (25 + p + pp + (ppp * 2)) / su && $gameVariables.value(91) < 1) $gameSwitches.setValue(177, true)
 	};
     };
     
@@ -186,7 +389,8 @@ Game_Troop.prototype.expTotal = function() {
     if($gameVariables.value(293)==10)ppexp *= 3;
     }
     if($gameSwitches.value(684))ppexp *= 2;
-        return r + ppexp;
+    ppexp = Math.round(ppexp);
+    return r + ppexp;
     }, 0);
 };
 
@@ -224,6 +428,7 @@ BattleManager.endBattle = function(result) {
     for (var i = 10; i < 150; i++) {
             	$gameScreen.erasePicture(i);
         		}
+        		$gameSwitches.setValue(858, false);
     if (result === 0) {
         $gameSystem.onBattleWin();
     } else if (this._escaped) {
@@ -274,6 +479,7 @@ Sprite_Battler.prototype.setupAnimation = function() {
     while (this._battler.isAnimationRequested()) {
         var data = this._battler.shiftAnimation();
         var animation = $dataAnimations[data.animationId];
+        if(!animation)return;
         var mirror = data.mirror;
         var delay = animation.position === 3 ? 0 : data.delay;
         this.startAnimation(animation, mirror, delay);
@@ -297,7 +503,7 @@ $gameSwitches.setValue(382,true);
 
 
 Game_Action.prototype.applyCritical = function(damage) {
-    return damage * 2 + 5;
+    return damage * 1.5 + 5;
 };
 
 Window_NumberInput.prototype.updateButtonsVisiblity = function() {
@@ -352,9 +558,44 @@ Game_Battler.prototype.onTurnEnd = function() {
     this.regenerateAll();
     this.updateStateTurns();
     this.updateBuffTurns();
-    if($gameParty.inBattle())this.removeStatesAuto(2);
+    this.removeStatesAuto(2);
 };
 
+Game_BattlerBase.prototype.updateStateTurns = function() {
+    this._states.forEach(function(stateId) {
+    	if($gameSwitches.value(479) && this.isActor()){
+    	}else{
+        if (this._stateTurns[stateId] > 0) {
+        if(!$gameParty.inBattle() && $dataStates[stateId].meta.heranai){
+        }else{
+        this._stateTurns[stateId]--;
+        }
+        }
+        }
+    }, this);
+};
+
+Game_Battler.prototype.removeStatesAuto = function(timing) {
+    this.states().forEach(function(state) {
+        if (this.isStateExpired(state.id) && state.autoRemovalTiming === timing) {
+        if($gameSwitches.value(479) && this.isActor()){
+        }else{
+            this.removeState(state.id);
+         }
+        }
+    }, this);
+};
+
+Game_Battler.prototype.removeBattleStates = function() {
+    this.states().forEach(function(state) {
+        if (state.removeAtBattleEnd) {
+        if($gameSwitches.value(479) && this.isActor()){
+        }else{
+            this.removeState(state.id);
+            }
+        }
+    }, this);
+};
 
 Game_Actor.prototype.stepsForTurn = function() {
     return 10;
@@ -462,7 +703,19 @@ Scene_Map.prototype.stop = function() {
 };
 
 
-
+Game_BattlerBase.prototype.param = function(paramId) {
+    var value = this.paramBase(paramId) + this.paramPlus(paramId);
+    if(this._buffs[paramId] == 1) value += 3;
+    if(this._buffs[paramId] == 2) value += 5;
+    if(this._buffs[paramId] == 3) value += 6;
+    if(this._buffs[paramId] == 4) value += 7;
+    if(this._buffs[paramId] == 5) value += 8;
+    if(this._buffs[paramId] == 6) value += 10;
+    value *= this.paramRate(paramId) * this.paramBuffRate(paramId);
+    var maxValue = this.paramMax(paramId);
+    var minValue = this.paramMin(paramId);
+    return Math.round(value.clamp(minValue, maxValue));
+};
 
 Game_BattlerBase.prototype.paramBuffRate = function(paramId) {
 	if(this._buffs[paramId] > 2) return (this._buffs[paramId] - 2) * 0.10 + 1.6;
@@ -641,6 +894,8 @@ Game_Player.prototype.moveByInput = function() {
     }
     }
     };
+    
+    
 
 Game_Action.prototype.itemEffectCommonEvent = function(target, effect) {
 $gameVariables.setValue(421,this.subject()._actorId)

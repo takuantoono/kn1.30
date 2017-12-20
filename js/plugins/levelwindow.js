@@ -11,25 +11,35 @@ Sprite_Damage.prototype.setupCriticalEffect = function() {
         		}
         		AudioManager.playSe({"name":"Explosion8","volume":100,"pitch":150,"pan":0})
         		var mafu = BattleManager._subject._actorId;
-            if(mafu>5)mafu=6;
-    	var shiokara = mafu * 5 - 80;
+            	if(mafu>5)mafu=6;
+            	$gameVariables._data[803] = 0;
+            	$gameVariables._data[520] = 380;
+				$gameVariables._data[521] = 250;
+				$gameVariables._data[522] = 170;
+				$gameVariables._data[532] = 170;
+				$gameVariables._data[810] = 0;
+				$gameSwitches._data[806] = true;
+				$gameVariables._data[60] = mafu;
+            	BattleManager.attack_chara();
+            	$gameSwitches._data[806] = false;
+            	
     	var yy = 0
-    	if(BattleManager._subject.isStateAffected(48)) yy = -50
-    	
+    	$gameSwitches.setValue(858, true);
+    	if(BattleManager._subject.isStateAffected(48)) yy = - 50;
     	var xx = $gameVariables.value(843) - 20;
-    	
-        	$gameScreen.movePicture(109+shiokara,0,xx, 250 + yy, 170, 170, 1000,0,1);
-        	$gameScreen.movePicture(111+shiokara,0,xx, 250 + yy, 170, 170, 1000,0,1);
-        	$gameScreen.movePicture(110+shiokara,0,xx, 250 + yy, 170, 170, 1000,0,1);
+        	$gameScreen.movePicture(109,0,xx, 250 + yy, 170, 170, 255,0,1);
+        	$gameScreen.movePicture(111,0,xx, 250 + yy, 170, 170, 255,0,1);
+        	$gameScreen.movePicture(110,0,xx, 250 + yy, 170, 170, 255,0,1);
         	if(BattleManager._subject.equips()[0] && BattleManager._subject.equips()[0].note.match(/<(?:two handed weapon)>/i)){
-        	$gameScreen.movePicture(112+shiokara,0,xx+145, 255 + yy, -170, 170, 1000,0,1);
+        	$gameScreen.movePicture(112,0,xx+145, 255 + yy, -170, 170, 255,0,1);
         	}else{
-        	$gameScreen.movePicture(112+shiokara,0,xx+132, 248 + yy, -170, 170, 1000,0,1);
+        	$gameScreen.movePicture(112,0,xx+132, 248 + yy, -170, 170, 255,0,1);
         	}
-        	$gameScreen.movePicture(113+shiokara,0,xx, 250 + yy, 170, 170, 1000,0,1);
+        	$gameScreen.movePicture(113,0,xx, 250 + yy, 170, 170, 255,0,1);
         };
         this._flashColor = [255, 0, 0, 160];
     this._flashDuration = 60;
+    //$gameSwitches.setValue(858, false);
 };
 
 BattleManager.applySubstitute = function(target) {
@@ -38,17 +48,27 @@ BattleManager.applySubstitute = function(target) {
         if (substitute && target !== substitute) {
             var mafu = substitute._actorId;
             if(mafu>5)mafu=6;
-        	var shiokara = mafu * 5 - 40;
-        	$gameScreen.movePicture(109+shiokara,0,380, 250, 170, 170, 1000,0,1);
-        	$gameScreen.movePicture(111+shiokara,0,380, 250, 170, 170, 1000,0,1);
-        	$gameScreen.movePicture(110+shiokara,0,380, 250, 170, 170, 1000,0,1);
-        	$gameScreen.movePicture(112+shiokara,0,380, 250, 170, 170, 1000,0,1);
-        	$gameScreen.movePicture(113+shiokara,0,380, 250, 170, 170, 1000,0,1);
-        	$gameScreen.movePicture(114+shiokara,0,380, 250, 170, 170, 1000,0,1);
-        	$gameScreen.movePicture(115+shiokara,0,380, 250, 170, 170, 1000,0,1);
-            $gameTemp.reserveCommonEvent(868);
+        		$gameVariables._data[803] = 0;
+            	$gameVariables._data[520] = 380;
+				$gameVariables._data[521] = 250;
+				$gameVariables._data[808] = 170;
+				$gameVariables._data[810] = 0;
+				$gameSwitches._data[806] = true;
+				$gameVariables._data[60] = mafu;
+            	BattleManager.picCharaDraw();
+            	$gameSwitches._data[806] = false;
+        	$gameScreen.movePicture(109,0,380, 250, 170, 170, 255,0,1);
+        	$gameScreen.movePicture(111,0,380, 250, 170, 170, 255,0,1);
+        	$gameScreen.movePicture(110,0,380, 250, 170, 170, 255,0,1);
+        	$gameScreen.movePicture(112,0,380, 250, 170, 170, 255,0,1);
+        	$gameScreen.movePicture(113,0,380, 250, 170, 170, 255,0,1);
+        	$gameScreen.movePicture(114,0,380, 250, 170, 170, 255,0,1);
+        	$gameScreen.movePicture(115,0,380, 250, 170, 170, 255,0,1);
+            //$gameTemp.reserveCommonEvent(868);
+            AudioManager.playSe({"name":"Evasion2","volume":90,"pitch":90,"pan":0})
             this._logWindow.displaySubstitute(substitute, target);
             return substitute;
+            
         }
     }
     return target;
@@ -75,7 +95,7 @@ Spriteset_Map.prototype.loadTileset = function() {
 };
 
 Scene_Save.prototype.onSavefileOk = function() {
-	$gameVariables.setValue(493, 0);
+	if(!$gameSwitches._data[614])$gameVariables._data[493] = 0;
     Scene_File.prototype.onSavefileOk.call(this);
     $gameSystem.onBeforeSave();
     if (DataManager.saveGame(this.savefileId())) {

@@ -707,6 +707,8 @@ Window_EquipItem.prototype.isEnabled = function(item) {
     if (item === null && this._actor) {
       var typeId = this._actor.equipSlots()[this._slotId];
       if (Yanfly.Param.EquipNonRemove.contains(typeId)) return false;
+    }else{
+    if(item && item._broken) return false;
     }
     return Yanfly.Equip.Window_EquipItem_isEnabled.call(this, item);
 };

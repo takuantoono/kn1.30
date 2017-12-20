@@ -470,6 +470,7 @@
             if (item) {
                 var iconBoxWidth = Window_Base._iconWidth + 4;
                 this.resetTextColor();
+                if (item._broken) this.changeTextColor(this.deathColor());
                 this.drawIcon(item.iconIndex, x + 8, y + this.lineHeight() / 2 - Window_Base._iconHeight / 2);
                 this.drawText(item.name, x + iconBoxWidth + 14, y, width - iconBoxWidth);
             }

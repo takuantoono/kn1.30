@@ -952,11 +952,11 @@ Game_Actor.prototype.hasBaseItem = function(baseItem) {
     for (var i = 0; i < this.equips().length; ++i) {
       var equip = this.equips()[i];
       if (!equip) continue;
-      if (!equip.originalBaseItemId) continue;
+      if (!equip.baseItemId) continue;
       if (DataManager.isWeapon(equip) && type === 'weapon') {
-        if (equip.originalBaseItemId === baseItem.id) return true;
+        if (equip.baseItemId === baseItem.id) return true;
       } else if (DataManager.isArmor(equip) && type === 'armor') {
-        if (equip.originalBaseItemId === baseItem.id) return true;
+        if (equip.baseItemId === baseItem.id) return true;
       }
     }
     return false;
@@ -1226,6 +1226,8 @@ Game_Party.prototype.hasItem = function(item, includeEquip) {
     return Yanfly.Item.Game_Party_hasItem.call(this, item, includeEquip);
 };
 
+
+
 Yanfly.Item.Game_Party_isAnyMemberEquipped =
     Game_Party.prototype.isAnyMemberEquipped;
 Game_Party.prototype.isAnyMemberEquipped = function(item) {
@@ -1236,6 +1238,7 @@ Game_Party.prototype.isAnyMemberEquipped = function(item) {
         if (actor.hasBaseItem(item)) return true;
       }
     }
+    console.log(Yanfly.Item.Game_Party_isAnyMemberEquipped.call(this, item))
     return Yanfly.Item.Game_Party_isAnyMemberEquipped.call(this, item);
 };
 

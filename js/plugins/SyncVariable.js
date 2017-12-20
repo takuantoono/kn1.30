@@ -366,7 +366,7 @@ function SyncManager() {
         syncData.variables = $gameVariables.getSyncData();
         syncData.switches  = $gameSwitches.getSyncData();
         this._mainData.set(paramUserId, syncData, function() {
-            this.outLog('変数情報を送信しました。');
+            console.log('変数情報を送信しました。');
         }.bind(this));
     };
 
@@ -377,7 +377,7 @@ function SyncManager() {
         }
         this._mainData.get(paramUserId, function(err, datum) {
             if (!err) {
-                this.outLog('変数情報を受信しました。');
+                console.log('変数情報を受信しました。');
                 var syncData   = datum.value;
                 this.isExecute = true;
                 $gameVariables.setSyncData(syncData.variables);
@@ -576,6 +576,7 @@ function SyncManager() {
     var _SceneManager_updateMain = SceneManager.updateMain;
     SceneManager.updateMain      = function() {
         _SceneManager_updateMain.apply(this, arguments);
+        if (SyncManager.suppressOnError) return;
         if (this.isSyncScene()) {
             SyncManager.update();
         }

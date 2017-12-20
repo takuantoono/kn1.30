@@ -58,8 +58,13 @@
     if(this.hasNoWeapons()){
       return normalId;
     }
+    if(BattleManager.isSecondAttack()){
+    var weapon = this.weapons()[1];  // at plural weapon, one's first skill.
+    }else{
     var weapon = this.weapons()[0];  // at plural weapon, one's first skill.
-    var id = weapon.meta.skill_id;
+    };
+    var id = false;
+    if(weapon) id = weapon.meta.skill_id;
     return id ? Number(id) : normalId;
   };
 

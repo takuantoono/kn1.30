@@ -994,6 +994,7 @@ TMPlugin.DescriptionEx.PassiveStateText = TMPlugin.DescriptionEx.Parameters['pas
     if(this._statusWindow) $gameVariables.setValue(155, false);
     if(this._goldWindow) this._goldWindow.hide();
     if(this._invLimitWindow) this._invLimitWindow.hide();
+    if(this._skillLearnDataWindow) this._skillLearnDataWindow.hide();
   };
   
   Scene_Base.prototype.descriptionClose = function() {
@@ -1004,6 +1005,7 @@ TMPlugin.DescriptionEx.PassiveStateText = TMPlugin.DescriptionEx.Parameters['pas
     if(this._statusWindow) $gameVariables.setValue(155, true);
     if(this._goldWindow) this._goldWindow.show();
     if(this._invLimitWindow) this._invLimitWindow.show();
+    if(this._skillLearnDataWindow) this._skillLearnDataWindow.show();
   };
 
   //-----------------------------------------------------------------------------
@@ -1073,6 +1075,13 @@ TMPlugin.DescriptionEx.PassiveStateText = TMPlugin.DescriptionEx.Parameters['pas
   Scene_Shop.prototype.createSellWindow = function() {
     _Scene_Shop_createSellWindow.call(this);
     this._sellWindow.setHandler('description', this.descriptionOpen.bind(this));
+    this.createDescriptionExWindow();
+  };
+  
+  var _Scene_LearnSkill_createSkillLearnWindow = Scene_LearnSkill.prototype.createSkillLearnWindow;
+  Scene_LearnSkill.prototype.createSkillLearnWindow = function() {
+    _Scene_LearnSkill_createSkillLearnWindow.call(this);
+    this._skillLearnWindow.setHandler('description', this.descriptionOpen.bind(this));
     this.createDescriptionExWindow();
   };
 

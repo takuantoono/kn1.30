@@ -390,6 +390,9 @@ function Window_Automap() {
 	
 	Window_Automap.prototype.tiaojian = function(rid, ppap) {
 	this._hasen = false;
+	if($dataMap.events[ppap] && $dataMap.events[ppap].meta.nowall){
+    return true;
+    }
 	if($dataMap.events[ppap] && rid == 76 && $gameSelfSwitches.value([$gameMap._mapId, ppap, "B"])){
     return true;
     }
@@ -408,6 +411,7 @@ function Window_Automap() {
     }
     return false;
 	};
+	
 	
 	Window_Automap.prototype.drawSmallIcon = function(index, x, y) {
 	if($gameSwitches.value(627)){
@@ -574,9 +578,21 @@ this.drawSmallIcon(323, xx + ttt, yy + ttt);
 
 if(id == 1579) this.drawSmallIcon(324, xx + ttt, yy + ttt);
 if(id == 1571) this.drawSmallIcon(325, xx + ttt, yy + ttt);
-if(id == 1580) this.drawSmallIcon(326, xx + ttt, yy + ttt);
+if(id == 1580){
+if($dataMap.events[ppap] && $dataMap.events[ppap].meta.novwall) {
+ this.drawSmallIcon(322, xx + ttt, yy + ttt);
+}else{
+ this.drawSmallIcon(326, xx + ttt, yy + ttt);
+ }
+ }
 if(id == 1581) this.drawSmallIcon(327, xx + ttt, yy + ttt);
-if(id == 1583) this.drawSmallIcon(328, xx + ttt, yy + ttt);
+if(id == 1583){
+if($dataMap.events[ppap] && $dataMap.events[ppap].meta.novwall) {
+ this.drawSmallIcon(322, xx + ttt, yy + ttt);
+}else{
+ this.drawSmallIcon(328, xx + ttt, yy + ttt);
+ }
+} 
 if(id == 1582) this.drawSmallIcon(329, xx + ttt, yy + ttt);
 if(id == 1584) this.drawSmallIcon(330, xx + ttt, yy + ttt);
 if(id == 1585) this.drawSmallIcon(331, xx + ttt, yy + ttt);
@@ -606,7 +622,7 @@ if($gameVariables.value(829)==xxx && $gameVariables.value(830)==yyy){
 
 
 if($dataMap.events[ppap] && $gameSwitches.value(283)){
-if($dataMap.events[ppap].meta.wana>0){
+if($dataMap.events[ppap].meta.wana>0 && !$gameSelfSwitches.value([$gameMap._mapId, ppap, "A"])){
  this.drawSmallIcon(348, xx + ttt, yy + ttt);
 }
 }
@@ -631,7 +647,10 @@ if(idd==1578 || idd==1579 || idd==1581 || idd==1582 ||
  if($dataMap.events[ppap] && $dataMap.events[ppap].meta.blue) {
  this.drawSmallIcon(913, xx + ttt, yy + ttt);
  }else{
+ if($dataMap.events[ppap] && $dataMap.events[ppap].meta.novwall) {
+ }else{
  this.drawSmallIcon(346, xx + ttt, yy + ttt);
+ }
  }}
 }
 idd = $gameMap.tileId(xxx+1, yyy, 0)
@@ -644,7 +663,10 @@ if(idd==1570 || idd==1579 || idd==1580 || idd==1583 ||
  if($dataMap.events[ppap] && $dataMap.events[ppap].meta.blue) {
  this.drawSmallIcon(913, xx + twf, yy + ttt);
  }else{
+ if($dataMap.events[ppap] && $dataMap.events[ppap].meta.novwall) {
+ }else{
  this.drawSmallIcon(346, xx + twf, yy + ttt);
+ }
  }}
 }
 idd = $gameMap.tileId(xxx, yyy-1, 0)
@@ -657,7 +679,10 @@ if(idd==1577 || idd==1571 || idd==1582 || idd==1583 ||
  if($dataMap.events[ppap] && $dataMap.events[ppap].meta.blue) {
  this.drawSmallIcon(912, xx + ttt, yy + ttt);
  }else{
+ if($dataMap.events[ppap] && $dataMap.events[ppap].meta.novwall) {
+ }else{
  this.drawSmallIcon(345, xx + ttt, yy + ttt);
+ }
  }}
 }
 idd = $gameMap.tileId(xxx, yyy+1, 0)
@@ -670,7 +695,10 @@ if(idd==1569 || idd==1571 || idd==1580 || idd==1581 ||
  if($dataMap.events[ppap] && $dataMap.events[ppap].meta.blue) {
  this.drawSmallIcon(912, xx + ttt, yy + twf);
  }else{
+ if($dataMap.events[ppap] && $dataMap.events[ppap].meta.novwall) {
+ }else{
  this.drawSmallIcon(345, xx + ttt, yy + twf);
+ }
  }}
  }
  
